@@ -7,7 +7,7 @@ var irc = {
 	muted: [],
 	blocked: [],
 	connection: undefined,
-	
+	ignoredStatuses: ["818", "819"],
 
 	// API
 
@@ -83,6 +83,22 @@ var irc = {
 			"PART": function(msg) {
 				_this.onPart(msg.source.nick, msg.target, msg.msg);
 			},
+			"MODE": function(msg) {
+				switch(msg.args[0]) {
+					case "+o":
+						_this.onOp(msg.target, msg.args[1]);
+						break;
+					case "-o":
+						_this.onDeop(msg.target, msg.args[1]);
+						break;
+					case "+v":
+						_this.onVoice(msg.target, msg.args[1]);
+						break;
+					case "-v":
+						_this.onDevoice(msg.target, msg.args[1]);
+						break;
+				}
+			},
 			"001": function(msg) {
 				if (_this.password) {
  					_this.changeNick(_this.nick + " " + _this.password);
@@ -130,7 +146,9 @@ var irc = {
  				_this.onError(""+msg.command + " " + msg.args.join(" ") + " :" + msg.msg);
  			},
 			"status": function(msg) {
- 				_this.onStatus(msg.toString());
+				if (_this.ignoredStatuses.indexOf(msg.command) == -1) {
+					_this.onStatus(msg.toString());
+				};
 			},
  			"close": _this.onSelfQuit
 		});
@@ -150,7 +168,11 @@ var irc = {
 	},
 
 	message: function(target, text) {
-		this.connection.privmsg(target, text);
+		if (text[0] == "/") {
+			this.slashCommand(text.slice(1));
+		} else {
+			this.connection.privmsg(target, text);
+		};
 	},
 	
 	slashCommand: function(target, text) {
@@ -712,7 +734,11 @@ var irc = {
 			$("#"+channelName+"Persons ul").prepend(rightBar1);
 			$("#"+channelName+"Persons ul").append(rightBar2);
 		}
-	} // Called after joining a new channel
+	}, // Called after joining a new channel
 
+	onOp: function(channel, nick) {},
+	onDeop: function(channel, nick) {},
+	onVoice: function(channel, nick) {},
+	onDevoice: function(channel, nick) {}
 }
 

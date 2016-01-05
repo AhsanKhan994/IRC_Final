@@ -78,11 +78,10 @@ var IRC = (function() {
 				} else {
 					handler();
 				}
-			} else {
-				if (msg.command.match(/[0-9]{3}/)) {
-					this.handle("status", msg);
-				};
-			}
+			};
+			if (msg.command.match(/[0-9]{3}/)) {
+				this.handlers["status"](msg);
+			};
 		},
 
 		onClose: function() {
@@ -157,9 +156,8 @@ var IRC = (function() {
 			line = line.substring(1);
 		}
 		this.line = line;
-		var tokens = line.split(":");
-		this.msg = tokens[1];
-		tokens = tokens[0].split(" ").filter(function(v) {
+		this.msg = line.substring(line.indexOf(":")+1);
+		tokens = line.split(":")[0].split(" ").filter(function(v) {
 			return v != "";
 		});
 		if (tokens[0] == "PING"

@@ -1033,7 +1033,8 @@ if(usrNme==""||usrNme==false)
 	window.location=".";
 }
 
-irc.connect(usrNme, "#EZZ");
+userName = usrNme;
+irc.connect(usrNme, ["#EZZ"]);
 
 	
 

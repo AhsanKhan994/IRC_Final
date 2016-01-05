@@ -325,5 +325,9 @@ var irc = {
 	onOp: function(channel, nick) {console.log("onOp " + channel + " " + nick);},
 	onDeop: function(channel, nick) {console.log("onDeop " + channel + " " + nick);},
 	onVoice: function(channel, nick) {console.log("onVoice " + channel + " " + nick);},
-	onDevoice: function(channel, nick) {console.log("onDevoice " + channel + " " + nick);}
+	onDevoice: function(channel, nick) {console.log("onDevoice " + channel + " " + nick);},
+	onNickChangeRequest: function(msg) {
+		console.log("onNickChangeRequest");
+		irc.changeNick("Guest");
+	}
 }

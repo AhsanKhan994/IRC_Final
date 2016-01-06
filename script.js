@@ -199,6 +199,10 @@ var irc = {
 		this.connection.nick(newNick);
 	},
 
+	login: function(nick, password) {
+		this.connection.nick(nick + " " + password);
+	},
+
 	banNickOnChannel: function(nick, channel) {
 		this.connection.mode(channel, "+b "+nick);
 	},
@@ -277,6 +281,7 @@ var irc = {
 					obj.bg = irc.colorIrc2html(color[1]);
 				}
 				colors.push(obj);
+				textPos -= color.join(",").length;
 			} else {
 				textPos++;
 			}

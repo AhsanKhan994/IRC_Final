@@ -159,6 +159,7 @@
 		function chngColorOnEnter(e)//AhsanKhan1 
 		{
 			var val=$(".inp").val();
+			var commandd=0;
 			//console.log(val.match(/whois/g));
 			
 			//var re = new RegExp("\:)", 'g');
@@ -170,25 +171,32 @@
 			
 				if (keyCode == '13' && val.length>1 && val!="" && val!=" ")
 				{
-					/*alert('f');
+					if(val[0]=='/')
+					{
+						commandd=1;
+					}
+					//alert('f');
 					var bg=$("#background-color").attr("data-val");
 					var fg=$("#foreground-color").attr("data-val");
+					var str;
+					
+					//alert(bg + " " + fg);
 					
 					if(bg=="none")
 					{
-						var str=""+fg+" "+val;
+						str=""+fg+" ";
 					}
 					
 					else
 					{
-						var str=""+fg+","+bg+" "+val;
+						str=""+fg+","+bg+" ";
 					}
 					
-					$(".inp").val(str);*/
+					//$(".inp").val(str);
 										
 					var toSnd=$("#joinedChannels .active span").first().text();
 					//alert(toSnd);
-					sendMessage(toSnd,val);
+					sendMessage(toSnd,val,str,fg,bg,commandd);
 					
 					$('#textInput').val('');
 					
@@ -238,7 +246,7 @@
                 <div class="panel_container container1" style="position:relative;top: 25px;">
 					<div class='panel-header1'> &nbsp;&nbsp; TurkChat Sohbet V1 <div onclick="toggleRightBar()" class="close_icon1" title="Friends List"></div> <div onclick="make_FullScreen()" class="full_screen_icon" title="Full Screen"></div> </div>
 					<div class='panel-header-settings'> 
-						<div class="kickOut" title="Kickout" onclick="kickHimeOut()" style="display:none;"></div>
+						<div class="kickOut" title="Kickout" onclick="kickNickIrc()" style="display:none;"></div>
 						<div class="mute" title="Mute" onclick="muteOrUnmute()" style="display:none;"></div>
 						<!--<div  class="closemsgs" onclick="closePrivateMsg()" title="Close Message"></div>-->
 						
@@ -331,7 +339,7 @@
                 </div>
 				
 				<div id="joinChan">
-					<input type="text" placeholder="Enter Channel" class="inp">
+					<input type="text" placeholder="Enter Channel with #" class="inp">
 					<input type="button" class="btn" value="Join" onclick="joinChannel()">
 					<input type="button" class="btn" value="Cancel" onclick="cancelChannel()">
 				</div>
@@ -855,9 +863,9 @@
 			
 			voiceDevoiceOper(2);
 			
-			$("li.nickSelected").css("background","rgb(255, 80, 80)"); 
+			//$("li.nickSelected").css("background","rgb(255, 80, 80)"); 
 			$("li.nickSelected").addClass("devoice");
-			$("li.nickSelected .nick").css("color","#fff"); 
+			//$("li.nickSelected .nick").css("color","#fff"); 
 		}
 		
 		else
@@ -867,9 +875,9 @@
 			
 			voiceDevoiceOper(1);
 			
-			$("li.nickSelected").css("background","#fff"); 
+			//$("li.nickSelected").css("background","#fff"); 
 			$("li.nickSelected").removeClass("devoice");
-			$("li.nickSelected .nick").css("color","#000"); 
+			//$("li.nickSelected .nick").css("color","#000"); 
 		}
 	}
 	
@@ -965,7 +973,9 @@
 				
 				var ignore=$(".nickSelected").hasClass("ignoreHim");
 				
-				if($("#myNick").html().match("@"))
+				//alert($(".activeMsgWindow").hasClass("isOperator"));
+				
+				if($(".activeMsgWindow").hasClass("isOperator"))
 				{
 					$("#rightClickOptions a.close_menu.if_op.op").css("display","block");
 					$("#rightClickOptions a.close_menu.if_op.deop").css("display","block");
@@ -1033,7 +1043,11 @@ if(usrNme==""||usrNme==false)
 	window.location=".";
 }
 
-irc.connect(usrNme, "#EZZ");
+userName = usrNme;
+
+var IRCLPS=localStorage.getItem("passLPSPassIRC");
+//alert(localStorage.getItem("passLPSPassIRC"));
+irc.connect(usrNme, ["#EZZ"],IRCLPS);
 
 	
 

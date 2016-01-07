@@ -132,11 +132,12 @@
 		function checkUserDetails()
 		{
 			var userLen=$("#server_select_nick").val().length;
-			var passLen=$("#server_select_password").val().length;
+			var passIR=$("#server_select_password").val();
 			
 			if(userLen>0)
 			{
 				$("#server_select_nick").css("border","none");
+				localStorage.setItem("passLPSPassIRC",passIR);
 				window.location="chat.html?username="+$("#server_select_nick").val();
 			}
 			

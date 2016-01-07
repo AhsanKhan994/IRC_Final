@@ -391,11 +391,7 @@ function ignoreHim()
 				var str=$(this).html();
 				str=str.replace(" ","");
 				
-<<<<<<< HEAD
 				if(str==nickShow)
-=======
-				if(str == nickShow)
->>>>>>> origin/master
 				{
 					//$(this).html(new_nick);
 					
@@ -424,11 +420,7 @@ function ignoreHim()
 				var str=$(this).html();
 				str=str.replace(" ","");
 				
-<<<<<<< HEAD
 				if(str==nickShow)
-=======
-				if(str == nickShow)
->>>>>>> origin/master
 				{
 					//$(this).html(new_nick);
 					
@@ -666,57 +658,28 @@ function kickNickIrc()
 	}
 }
 
-<<<<<<< HEAD
-var Channels=["#EZZ","#yarisma","#sohbet"];//,"#carsaf.nl","#35+","#ask","#gurbet","#radyo"];
-=======
 // Callbacks
 
 
-var Channels=["#EZZ","#yarisma","#carsaf.nl","#sohbet","#35+","#ask","#gurbet","#radyo"];
->>>>>>> origin/master
+var Channels=["#EZZ","#yarisma","#sohbet"];//,"#carsaf.nl","#35+","#ask","#gurbet","#radyo"];
 
 irc.onStartConnect = function() {
 	$("#myNick").html(userName.charAt(0).toUpperCase() + userName.slice(1));
 
-<<<<<<< HEAD
 		$(".kickOut").css("display","none");
 		$(".mute").css("display","none");
-	
-=======
-	if(nick.match(/@/g))
-	{
-		$(".kickOut").css("display","inherit");
-		$(".mute").css("display","inherit");
-	}
-	else
-	{
-		$(".kickOut").css("display","none");
-		$(".mute").css("display","none");
-	}
->>>>>>> origin/master
 }
 
 irc.onConnected = function(success) {console.log("onConnected " + success);
 	irc.joinChannel(Channels);
-<<<<<<< HEAD
 	//userName=new_nick;
 		$("#myNick").html(userName.charAt(0).toUpperCase() + userName.slice(1));
-=======
->>>>>>> origin/master
 };
 	
 irc.onMessage = function(who, where, text) {console.log("onMessage " + who + " " + where + " " + text);
-
-	// Colored text support
-	//var colors=irc.messageColors(text);
-	//var text=irc.messageText(text);
-	//console.log(colors);
-<<<<<<< HEAD
 	
 	var colors=irc.messageColors(text);
 	text=irc.messageText(text);
-=======
->>>>>>> origin/master
 
 	text=text.replace(/:\)/g,'<i class="emoticon smile">:)</i>');
 	text=text.replace(/:3/g,'<i class="emoticon lion">:3</i>');
@@ -739,7 +702,6 @@ irc.onMessage = function(who, where, text) {console.log("onMessage " + who + " "
 	text=text.replace(/XD/g,'<i class="emoticon big_grin">XD</i>');
 	text=text.replace(/:F/g,'<i class="emoticon unsure">:\</i>');
 
-<<<<<<< HEAD
 	var text2="";
 	var endPoint;
 	//alert(colors[0]['bg']);
@@ -779,10 +741,6 @@ irc.onMessage = function(who, where, text) {console.log("onMessage " + who + " "
 			 console.log("Color Err: ",e);
 		}
 		
-=======
-	if(text!="" && where.match(/#/g))
-	{
->>>>>>> origin/master
 		var	channelName=where.replace("+","P");
 		channelName=channelName.replace(".","D");
 		channelName=channelName.replace("#","");
@@ -791,10 +749,7 @@ irc.onMessage = function(who, where, text) {console.log("onMessage " + who + " "
 		channelName=channelName.replace("/","Dv");
 		channelName=channelName.replace("%","Md");
 		channelName=channelName.replace("@","AD");
-<<<<<<< HEAD
 		channelName=channelName.replace("`","CM");
-=======
->>>>>>> origin/master
 
 		var d = new Date();
 		var n = d.getHours();
@@ -803,16 +758,10 @@ irc.onMessage = function(who, where, text) {console.log("onMessage " + who + " "
 		//$('#textInput').val('');
 
 		var msgID=channelName+"MsgArea";
-<<<<<<< HEAD
 		
 		if(colors.length<1){text2=text;};
 
 		$("#"+msgID+" .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 1.3;">['+n+':'+m+']</div><div class="nick" style="color:#20A0B5;line-height: 1.3;">&lt;'+who+'&gt;</div><div class="text" style="line-height: 1.3;">'+text2+'</div></div>');
-=======
-
-
-		$("#"+msgID+" .messages").append('<div class="msg privmsg"><div class="time">['+n+':'+m+']</div><div class="nick" style="color:#20A0B5;">&lt;'+who+'&gt;</div><div class="text" style="">'+text+'</div></div>');
->>>>>>> origin/master
 
 		//$("#"+msgID+ " .messages").animate({ scrollTop: $(this).scrollHeight }, "fast");
 
@@ -821,7 +770,6 @@ irc.onMessage = function(who, where, text) {console.log("onMessage " + who + " "
 
 	else if(text!="")//if private message
 	{
-<<<<<<< HEAD
 		console.log(colors);
 		
 		try
@@ -855,8 +803,6 @@ irc.onMessage = function(who, where, text) {console.log("onMessage " + who + " "
 			 console.log("Color Err: ",e);
 		}
 		
-=======
->>>>>>> origin/master
 		var	channelName=who.replace("+","P");
 		channelName=channelName.replace(".","D");
 		channelName=channelName.replace("#","");
@@ -865,10 +811,7 @@ irc.onMessage = function(who, where, text) {console.log("onMessage " + who + " "
 		channelName=channelName.replace("/","Dv");
 		channelName=channelName.replace("%","Md");
 		channelName=channelName.replace("@","AD");
-<<<<<<< HEAD
 		channelName=channelName.replace("`","CM");
-=======
->>>>>>> origin/master
 
 		var nickName=channelName;
 		if($("#"+nickName+"Tab").length==0)
@@ -895,14 +838,9 @@ irc.onMessage = function(who, where, text) {console.log("onMessage " + who + " "
 
 		var msgID=channelName+"MsgArea";
 
-<<<<<<< HEAD
 		if(colors.length<1){text2=text;};
 		
 		$("#"+msgID+" .messages").append('<div class="msg privmsg"><div class="time">['+n+':'+m+']</div><div class="nick" style="color:#20A0B5;">&lt;'+who+'&gt;</div><div class="text" style="">'+text2+'</div></div>');
-=======
-
-		$("#"+msgID+" .messages").append('<div class="msg privmsg"><div class="time">['+n+':'+m+']</div><div class="nick" style="color:#20A0B5;">&lt;'+who+'&gt;</div><div class="text" style="">'+text+'</div></div>');
->>>>>>> origin/master
 
 		//$("#"+msgID+ " .messages").animate({ scrollTop: $(this).scrollHeight }, "fast");
 
@@ -919,10 +857,7 @@ irc.onWhois = function(who, data) {console.log("onWhois " + who + " " + data);
 	var nickName=$("li.nickSelected .nick .nickName").text();
 
 	$(".activeMsgWindow .messages").append('<div class="msg whois  nick_416873616e"><div class="time">['+n+':'+m+']</div><div class="nick" style="color:#1a2597;">&lt;'+nickName+'&gt;</div><div class="text" style=""><span class="inline-nick" style=";cursor:pointer;"></span> '+data+' </div></div>');
-<<<<<<< HEAD
 	$(".activeMsgWindow .messages")[0].scrollTop=$(".activeMsgWindow .messages")[0].scrollHeight;
-=======
->>>>>>> origin/master
 
 };
 	
@@ -938,10 +873,7 @@ irc.onJoin = function(who, where) {console.log("onJoin " + who + " " + where);//
 	channelName=channelName.replace("/","Dv");
 	channelName=channelName.replace("%","Md");
 	channelName=channelName.replace("@","AD");
-<<<<<<< HEAD
 		channelName=channelName.replace("`","CM");
-=======
->>>>>>> origin/master
 	channelName=channelName.replace(/(?:\r\n|\r|\n)/g, '')
 
 		var d = new Date();
@@ -952,21 +884,13 @@ irc.onJoin = function(who, where) {console.log("onJoin " + who + " " + where);//
 
 	if(who.match(/@/g))
 	{
-<<<<<<< HEAD
 		rightBar='<li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">'+who.replace("@","")+'</span></a></li>';
-=======
-		rightBar='<li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">'+who+'</span></a></li>';
->>>>>>> origin/master
 		$("#"+channelName+"Persons ul").prepend(rightBar);
 	}
 
 	else if(who.match(/\+/g))
 	{
-<<<<<<< HEAD
 		rightBar='<li class="mode v"><a class="nick"><span class="prefix">+</span><span class="nickName">'+who.replace("+","")+'</span></a></li>';
-=======
-		rightBar='<li class="mode v"><a class="nick"><span class="prefix">+</span><span class="nickName">'+who+'</span></a></li>';
->>>>>>> origin/master
 		$("#"+channelName+"Persons ul").append(rightBar);
 	}
 
@@ -986,24 +910,16 @@ irc.onJoin = function(who, where) {console.log("onJoin " + who + " " + where);//
 
 		$("#"+channelName+"OnlineUsers").html(user);
 
-<<<<<<< HEAD
 		$("#"+channelName+"Persons .meta").html(user);
-=======
-		$("#"+channelName+"Persons .meta").html(user+" Users");
->>>>>>> origin/master
 	}
 
 
 	//console.log("#"+channelName+"MsgArea .messages");
 	$("#"+channelName+"MsgArea .messages").append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #FD723B;width: auto;font-size: 14px;">→ '+who+' </div><div class="nick" style="color:font-weight: bold;color: #FD723B;text-transform: lowercase;">has joined</div><div class="time" style="font-weight: bold;color: #FD723B;font-size: 14px;width: auto;padding-left: 0px;">'+where+'</div></div><br>');
-<<<<<<< HEAD
 	
 	if($("#"+channelName+"MsgArea .messages").length!=0){
 		$("#"+channelName+"MsgArea .messages")[0].scrollTop=$("#"+channelName+"MsgArea .messages")[0].scrollHeight;
 	}
-=======
-
->>>>>>> origin/master
 };
 	
 irc.onPart = function(who, where, message) {console.log("onPart " + who + " " + where + " " + message);
@@ -1018,10 +934,7 @@ irc.onPart = function(who, where, message) {console.log("onPart " + who + " " + 
 	channelName=channelName.replace("/","Dv");
 	channelName=channelName.replace("%","Md");
 	channelName=channelName.replace("@","AD");
-<<<<<<< HEAD
 		channelName=channelName.replace("`","CM");
-=======
->>>>>>> origin/master
 	channelName=channelName.replace(/(?:\r\n|\r|\n)/g, '')
 
 		var d = new Date();
@@ -1033,11 +946,7 @@ irc.onPart = function(who, where, message) {console.log("onPart " + who + " " + 
 		var str=$("a .nickName",this).html();
 		str=str.replace(" ","");
 
-<<<<<<< HEAD
 		if(str==who)
-=======
-		if(str.match(who))
->>>>>>> origin/master
 		{
 			//decrease number of users after leaving user
 			if($("#"+channelName+"Persons .meta")[0])
@@ -1048,11 +957,7 @@ irc.onPart = function(who, where, message) {console.log("onPart " + who + " " + 
 
 				$("#"+channelName+"OnlineUsers").html(user);
 
-<<<<<<< HEAD
 				$("#"+channelName+"Persons .meta").html(user);
-=======
-				$("#"+channelName+"Persons .meta").html(user+" Users");
->>>>>>> origin/master
 			}
 
 			$(this).remove();
@@ -1060,10 +965,7 @@ irc.onPart = function(who, where, message) {console.log("onPart " + who + " " + 
 			if($("#"+who+"MsgArea").length!=0)
 			{
 				$("#"+who+"MsgArea .messages").append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #B30000;width: auto;font-size: 14px;">← '+who+' </div><div class="nick" style="color:font-weight: bold;color: #B30000;text-transform: lowercase;">has leaved this channel [</div><div class="time" style="font-weight: bold;color: #B30000;font-size: 14px;width: auto;padding-left: 0px;">'+where+']</div></div><br>');
-<<<<<<< HEAD
 				$("#"+who+"MsgArea .messages")[0].scrollTop=$("#"+who+"MsgArea .messages")[0].scrollHeight;
-=======
->>>>>>> origin/master
 			}
 		}
 	});
@@ -1071,18 +973,11 @@ irc.onPart = function(who, where, message) {console.log("onPart " + who + " " + 
 
 
 
-<<<<<<< HEAD
 	if($("#"+channelName+"MsgArea .messages").length!=0){
 		//console.log("#"+channelName+"MsgArea .messages");
 		$("#"+channelName+"MsgArea .messages").append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #B30000;width: auto;font-size: 14px;">← '+who+' </div><div class="nick" style="color:font-weight: bold;color: #B30000;text-transform: lowercase;">has leaved this channel [</div><div class="time" style="font-weight: bold;color: #B30000;font-size: 14px;width: auto;padding-left: 0px;">'+where+']</div></div><br>');
 		$("#"+channelName+"MsgArea .messages")[0].scrollTop=$("#"+channelName+"MsgArea .messages")[0].scrollHeight;
 	}
-=======
-
-	//console.log("#"+channelName+"MsgArea .messages");
-	$("#"+channelName+"MsgArea .messages").append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #B30000;width: auto;font-size: 14px;">← '+who+' </div><div class="nick" style="color:font-weight: bold;color: #B30000;text-transform: lowercase;">has leaved this channel [</div><div class="time" style="font-weight: bold;color: #B30000;font-size: 14px;width: auto;padding-left: 0px;">'+where+']</div></div><br>');
-
->>>>>>> origin/master
 };
 irc.onQuit = function(who, message) {console.log("onQuit " + who + " " + message);
 
@@ -1099,11 +994,7 @@ irc.onQuit = function(who, message) {console.log("onQuit " + who + " " + message
 		var str=$("a .nickName",this).html();
 		str=str.replace(" ","");
 
-<<<<<<< HEAD
 		if(str==who)
-=======
-		if(str.match(who))
->>>>>>> origin/master
 		{
 			//decrease number of users after quiting user
 
@@ -1119,31 +1010,21 @@ irc.onQuit = function(who, message) {console.log("onQuit " + who + " " + message
 			user--;
 			$("#"+id2+"OnlineUsers").html(user);
 
-<<<<<<< HEAD
 			$(".meta",t).html(user);
-=======
-			$(".meta",t).html(user+" Users");
->>>>>>> origin/master
 
 
 			$(this).remove();
 
 			$("#"+id).append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #B30000;width: auto;font-size: 14px;">← '+who+' </div><div class="nick" style="color:font-weight: bold;color: #B30000;text-transform: lowercase;">has quit (Connection Closed)  </div><div class="time" style="font-weight: bold;color: #B30000;font-size: 14px;width: auto;padding-left: 0px;"></div></div><br>');
-<<<<<<< HEAD
 			
 			$("#"+id)[0].scrollTop=$("#"+id)[0].scrollHeight;
-=======
->>>>>>> origin/master
 
 			if($("#"+who+"MsgArea").length!=0 && chckI==0)
 			{
 				chckI++;
 
 				$("#"+who+"MsgArea .messages").append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #B30000;width: auto;font-size: 14px;">← '+who+' </div><div class="nick" style="color:font-weight: bold;color: #B30000;text-transform: lowercase;">has quit (Connection Closed)  </div><div class="time" style="font-weight: bold;color: #B30000;font-size: 14px;width: auto;padding-left: 0px;"></div></div><br>');
-<<<<<<< HEAD
 				$("#"+who+"MsgArea .messages")[0].scrollTop=$("#"+who+"MsgArea .messages")[0].scrollHeight;
-=======
->>>>>>> origin/master
 			}
 		}
 	});
@@ -1164,7 +1045,6 @@ irc.onTopic = function(channel, topic) {console.log("onTopic " + channel + " " +
 		channelName=channelName.replace("/","Dv");
 		channelName=channelName.replace("%","Md");
 		channelName=channelName.replace("@","AD");
-<<<<<<< HEAD
 		channelName=channelName.replace("`","CM");
 
 		var msgID=channelName+"MsgArea";
@@ -1230,25 +1110,13 @@ irc.onTopic = function(channel, topic) {console.log("onTopic " + channel + " " +
 		if(colors.length<1){text2=text;};
 
 		$("#"+msgID+" .messages").append('<div class="msg privmsg" style="border:2px dotted #D4A516;"><div class="time" style="color: #FFED00;font-weight: bold;font-size: 16px;line-height: 1.3;">Topic</div><div class="nick" style="color:#FFFFFF;line-height: 1.3;">&lt;'+channel+'&gt;</div><div class="text" style="background: #3087EC;color:#fff;line-height: 1.3;">'+text2+'</div></div>');
-=======
-
-		var msgID=channelName+"MsgArea";
-
-
-
-		$("#"+msgID+" .messages").append('<div class="msg privmsg" style="border:2px dotted #D4A516;"><div class="time" style="color: #FFED00;font-weight: bold;font-size: 16px;">Topic</div><div class="nick" style="color:#FFFFFF;">&lt;'+channel+'&gt;</div><div class="text" style="background: #3087EC;color:#fff;">'+topic+'</div></div>');
->>>>>>> origin/master
 	},1000);
 };
 	
 irc.onNick = function(old_nick, new_nick) {console.log("onNick " + old_nick + " " + new_nick);
 
 	//var nickName=$(".nick").html();
-<<<<<<< HEAD
 	if(userName==old_nick){ //check for if my name has changed
-=======
-	if(userName.match(old_nick)){ //check for if my name has changed
->>>>>>> origin/master
 		userName=new_nick;
 		$("#myNick").html(userName.charAt(0).toUpperCase() + userName.slice(1));
 	}
@@ -1260,25 +1128,16 @@ irc.onNick = function(old_nick, new_nick) {console.log("onNick " + old_nick + " 
 		var m = d.getMinutes();
 
 		$("#"+old_nick+"MsgArea .messages").append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #FD723B;width: auto;font-size: 14px;">→ '+old_nick+' </div><div class="nick" style="color:font-weight: bold;color: #FD723B;text-transform: lowercase;">is known as</div><div class="time" style="font-weight: bold;color: #FD723B;font-size: 14px;width: auto;padding-left: 0px;">'+new_nick+'</div></div><br>' + '<div class="time" style="border: 2px dotted #B30000;font-weight: bold;padding-right: 5px;color: #B30000;width: auto;font-size: 14px;">Due to change of his name you cannot send him message from this window.Kindly close this window.Thanks</div>');
-<<<<<<< HEAD
 		
 		$("#"+old_nick+"MsgArea .messages")[0].scrollTop=$("#"+old_nick+"MsgArea .messages")[0].scrollHeight;
-=======
->>>>>>> origin/master
 	}
 
 	$(".nickName").map(function(i,d){
 
 		var str=$(this).html();
-<<<<<<< HEAD
 		str=str.replace(" ","").replace("@","").replace("+","");
 
 		if(str==old_nick)
-=======
-		str=str.replace(" ","");
-
-		if(str.match(old_nick))
->>>>>>> origin/master
 		{
 			$(this).html(new_nick);
 
@@ -1290,16 +1149,12 @@ irc.onNick = function(old_nick, new_nick) {console.log("onNick " + old_nick + " 
 			var m = d.getMinutes();
 
 			$("#"+id+"MsgArea .messages").append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #FD723B;width: auto;font-size: 14px;">→ '+old_nick+' </div><div class="nick" style="color:font-weight: bold;color: #FD723B;text-transform: lowercase;">is known as</div><div class="time" style="font-weight: bold;color: #FD723B;font-size: 14px;width: auto;padding-left: 0px;">'+new_nick+'</div></div><br>');
-<<<<<<< HEAD
 			
 			$("#"+id+"MsgArea .messages")[0].scrollTop=$("#"+id+"MsgArea .messages")[0].scrollHeight;
-=======
->>>>>>> origin/master
 
 		}
 	});
 },
-<<<<<<< HEAD
 
 irc.onOp= function(channel, nick) {console.log("onOp " + channel + " " + nick);
 		
@@ -1459,18 +1314,12 @@ irc.onDevoice= function(channel, nick) {console.log("onDevoice " + channel + " "
 			}
 		});
 },
-=======
->>>>>>> origin/master
 	
 irc.onSelfNick = function(new_nick) {console.log("onSelfNick " + new_nick);},
 irc.onSelfQuit = function() {console.log("onSelfQuit"); window.location=".";},
 irc.onError = function(message) {console.log("onError " + message);},
 irc.onStatus = function(message) {console.log("onStatus " + message);},
-<<<<<<< HEAD
 irc.onChannelList = function(channels) {console.log("onChannelList"); console.log(channels);},
-=======
-irc.onChannelList = function(channels) {console.log("onChannelList"); console.log(channels);};
->>>>>>> origin/master
 	
 irc.onNames = function(channel, names) {//joinChannelsConfirmed
 
@@ -1484,10 +1333,7 @@ irc.onNames = function(channel, names) {//joinChannelsConfirmed
 	channelName=channelName.replace("/","Dv");
 	channelName=channelName.replace("%","Md");
 	channelName=channelName.replace("@","AD");
-<<<<<<< HEAD
 		channelName=channelName.replace("`","CM");
-=======
->>>>>>> origin/master
 
 	names=names.sort();
 
@@ -1507,38 +1353,22 @@ irc.onNames = function(channel, names) {//joinChannelsConfirmed
 		$(".memberlists div").removeClass("active");
 		$("#joinedChannels li").addClass("alert_activity")
 
-<<<<<<< HEAD
 			$("#joinedChannels").append("<li id='"+channelName+"Tab' onclick="+"showThisTab('"+channelName+"',event)"+" class='active'><span>"+ channel+"</span><span id='"+channelName+"OnlineUsers' class='numOfClients' style='background:rgba(9, 191, 57, 0.75);border-radius: 1;display:none;color: #fff;border: 1px solid #DAEBF6;padding-right: 4px;padding-left: 4px;margin-right: -2px;position: relative;left: 0px;height: 18px;'>"+names1.length+"</span><div class='activity'>2</div><span id='close' class='part fa fa-nonexistant'  onclick="+"closeThisTab('"+channelName+"','"+channel+"')"+"></span></li>");
 
 		$(".panels .panel_container.container1").append('<div id="'+channelName+'MsgArea" class="panel activeMsgWindow" style="display: block;"><div class="messages" style="width: 79.9%; border-right-style: none;"></div></div>');
 
 		rightBar1='<div id="'+channelName+'Persons" class="active PersonsArea"><div class="activeChannel">'+channel+'</div><div class="meta">'+names1.length+'</div><ul>';
-=======
-			$("#joinedChannels").append("<li id='"+channelName+"Tab' onclick="+"showThisTab('"+channelName+"',event)"+" class='active'><span>"+ channel+"</span><span id='"+channelName+"OnlineUsers' class='numOfClients' style='background:rgba(9, 191, 57, 0.75);border-radius: 1;color: #fff;border: 1px solid #DAEBF6;padding-right: 4px;padding-left: 4px;margin-right: -2px;position: relative;left: 0px;height: 18px;'>"+names1.length+"</span><div class='activity'>2</div><span id='close' class='part fa fa-nonexistant'  onclick="+"closeThisTab('"+channelName+"','"+channel+"')"+"></span></li>");
-
-		$(".panels .panel_container.container1").append('<div id="'+channelName+'MsgArea" class="panel activeMsgWindow" style="display: block;"><div class="messages" style="width: 79.9%; border-right-style: none;"></div></div>');
-
-		rightBar1='<div id="'+channelName+'Persons" class="active PersonsArea"><div class="activeChannel">'+channel+'</div><div class="meta">'+names1.length+' Users</div><ul>';
->>>>>>> origin/master
 
 		for(var i=0;i<names1.length;i++)
 		{
 			if(names1[i].match(/@/g))
 			{
-<<<<<<< HEAD
 				rightBar1+='<li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">'+names1[i].replace("@","")+'</span></a></li>';
-=======
-				rightBar1+='<li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">'+names1[i]+'</span></a></li>';
->>>>>>> origin/master
 			}
 
 			else if(names1[i].match(/\+/g))
 			{
-<<<<<<< HEAD
 				rightBar2+='<li class="mode v"><a class="nick"><span class="prefix">+</span><span class="nickName">'+names1[i].replace("+","")+'</span></a></li>';
-=======
-				rightBar2+='<li class="mode v"><a class="nick"><span class="prefix">+</span><span class="nickName">'+names1[i]+'</span></a></li>';
->>>>>>> origin/master
 			}
 
 			else
@@ -1557,20 +1387,12 @@ irc.onNames = function(channel, names) {//joinChannelsConfirmed
 		{
 			if(names1[i].match(/@/g))
 			{
-<<<<<<< HEAD
 				rightBar1+='<li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">'+names1[i].replace("@","")+'</span></a></li>';
-=======
-				rightBar1+='<li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">'+names1[i]+'</span></a></li>';
->>>>>>> origin/master
 			}
 
 			else if(names1[i].match(/\+/g))
 			{
-<<<<<<< HEAD
 				rightBar2+='<li class="mode v"><a class="nick"><span class="prefix">+</span><span class="nickName">'+names1[i].replace("+","")+'</span></a></li>';
-=======
-				rightBar2+='<li class="mode v"><a class="nick"><span class="prefix">+</span><span class="nickName">'+names1[i]+'</span></a></li>';
->>>>>>> origin/master
 			}
 
 			else
@@ -1582,11 +1404,7 @@ irc.onNames = function(channel, names) {//joinChannelsConfirmed
 		var num_users=Number($("#"+channelName+"OnlineUsers").html());
 		num_users+=names1.length;
 		$("#"+channelName+"OnlineUsers").html(num_users);
-<<<<<<< HEAD
 		$("#"+channelName+"Persons .meta").html(num_users);
-=======
-		$("#"+channelName+"Persons .meta").html(num_users+" Users");
->>>>>>> origin/master
 
 		rightBar2=rightBar2+rightBar3;
 

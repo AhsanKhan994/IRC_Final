@@ -6,17 +6,17 @@ var IRC = (function() {
 		this.username = username;
 		this.nickname = nickname;
 		this.ready = false;
-		this.shouldConnect = false;
-		this.handlers = {
-			"PING": function(msg) {
-				_this.sendIrc("PONG "+msg.msg);
-			}};
+ 		this.shouldConnect = false;
+ 		this.handlers = {
+ 			"PING": function(msg) {
+ 				_this.sendIrc("PONG "+msg.msg);
+ 		}};
 		this.mySocket = new jSocket();
 		this.mySocket.onReady = function () {
 			console.log("socket ready");
 			this.buffer = []
 			_this.ready = true;
-			_this.doConnect();
+ 			_this.doConnect();
 		}
 		this.mySocket.onConnect = function (success,data) {
 			console.log("socket connected");
@@ -44,15 +44,15 @@ var IRC = (function() {
 	IRC.prototype = {
 		connect: function() {
 			console.log("Connecting");
-			this.shouldConnect = true;
-			this.doConnect();
-		},
-
-		doConnect: function() {
-			if (this.ready && this.shouldConnect) {
-				console.log("Connecting to " + this.host);
-				this.mySocket.connect(this.host, this.port);
-			}
+ 			this.shouldConnect = true;
+ 			this.doConnect();
+ 		},
+ 
+ 		doConnect: function() {
+ 			if (this.ready && this.shouldConnect) {
+ 				console.log("Connecting to " + this.host);
+ 				this.mySocket.connect(this.host, this.port);
+ 			}
 		},
 
 		handshake: function () {
@@ -64,29 +64,32 @@ var IRC = (function() {
 			if (line == "")
 				return;
 			var msg = new Message(line);
+			
 			if (msg.command[0] == "4") {
-				this.handle("error", msg);
-			};
-			this.handle(msg.command, msg);
+ 					this.handle("error", msg);
+ 			};
+ 			this.handle(msg.command, msg);
 		},
-
-		handle: function(key, msg) {
-			var handler = this.handlers[key];
+ 
+			handle: function(key, msg) {
+ 			var handler = this.handlers[key];
+ 
 			if (handler != undefined) {
+				
 				if (msg != undefined) {
-					handler(msg);
-				} else {
-					handler();
-				}
-			};
-			if (msg.command.match(/[0-9]{3}/)) {
-				this.handlers["status"](msg);
-			};
+ 					handler(msg);
+ 				} else {
+ 					handler();
+ 				}
+				};
+ 			if (msg.command.match(/[0-9]{3}/)) {
+ 				this.handlers["status"](msg);
+ 			};
 		},
-
+		
 		onClose: function() {
 			this.handle("close");
-		},
+  		},
 
 		sendIrc: function (line) {
 			console.log("-> "+line);
@@ -108,14 +111,14 @@ var IRC = (function() {
 		part: function(channel) {
 			this.sendIrc("PART " + channel);
 		},
-
+		
 		kick: function(channel, nick, reason) {
-			if (reason == undefined) {
-				this.sendIrc("KICK " + channel + " " + nick);
-			} else {
-				this.sendIrc("KICK " + channel + " " + nick + " :" + reason);
-			}
-		},
+ 			if (reason == undefined) {
+ 				this.sendIrc("KICK " + channel + " " + nick);
+ 			} else {
+ 				this.sendIrc("KICK " + channel + " " + nick + " :" + reason);
+ 			}
+ 		},
 
 		quit: function() {
 			this.sendIrc("QUIT");
@@ -123,15 +126,16 @@ var IRC = (function() {
 
 		nick: function(nick) {
 			this.sendIrc("NICK " + nick);
+			
 		},
 
 		ctcp: function(target, message) {
 			this.sendIrc("PRIVMSG " + target + " :\001" + message + "\001");
 		},
-
+		
 		pong: function(data) {
-			this.sendIrc("PONG " + " :" + data);
-		},
+ 			this.sendIrc("PONG " + " :" + data);
+ 		},
 
 		mode: function(target, line) {
 			this.sendIrc("MODE " + target + " :" + line);
@@ -157,12 +161,12 @@ var IRC = (function() {
 		}
 		this.line = line;
 		this.msg = line.substring(line.indexOf(":")+1);
-		tokens = line.split(":")[0].split(" ").filter(function(v) {
+ 		tokens = line.split(":")[0].split(" ").filter(function(v) {
 			return v != "";
 		});
 		if (tokens[0] == "PING"
-			|| tokens[0] == "NOTICE"
-			|| tokens[0] == "ERROR") {
+ 			|| tokens[0] == "NOTICE"
+ 			|| tokens[0] == "ERROR") {
 			this.source = new Source("");
 			this.command = tokens[0];
 			this.target = tokens[1];
@@ -178,7 +182,8 @@ var IRC = (function() {
 		return this.line;
 	};
 
-
+	var checkMyName=0;//AhsanKhanNow
+	
 	function Source(line) {
 		var bang = line.indexOf("!");
 		if (bang == -1) {
@@ -187,6 +192,10 @@ var IRC = (function() {
 		} else {
 			this.type = "user";
 			this.nick = line.substring(0, bang);
+			if(checkMyName==0){
+			changeNickIfExist(this.nick);
+			checkMyName++;
+			}
 			var at = line.indexOf("@");
 			this.name = line.substring(bang+1, at);
 			this.host = line.substring(at+1);

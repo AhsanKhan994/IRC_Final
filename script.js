@@ -351,6 +351,7 @@ var irc = {
 	}
 }
 
+userName = undefined;
 function changeNickIfExist(nck)
 {
 	$("#myNick").html(nck);

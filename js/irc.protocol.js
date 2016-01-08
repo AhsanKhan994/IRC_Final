@@ -1,10 +1,11 @@
 var IRC = (function() {
-	function IRC(host, port, username, nickname) {
+	function IRC(host, port, username, nickname, password) {
 		var _this = this;
 		this.host = host;
 		this.port = port;
 		this.username = username;
 		this.nickname = nickname;
+		this.password = password;
 		this.ready = false;
  		this.shouldConnect = false;
  		this.handlers = {
@@ -57,7 +58,11 @@ var IRC = (function() {
 
 		handshake: function () {
 			this.sendIrc("USER "+this.username+" 0 * :jsIRC");
-			this.sendIrc("NICK "+this.nickname);
+			if (this.password) {
+				this.sendIrc("NICK "+this.nickname + " " + this.password);
+			} else {
+				this.sendIrc("NICK "+this.nickname);
+			}
 		},
 
 		readLine: function (line) {

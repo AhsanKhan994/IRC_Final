@@ -19,7 +19,7 @@ var irc = {
 			console.log("Already connected");
 			return;
 		};
-		this.connection = new IRC("irc.bizimdiyar.com", "6667", "TurkWeb", nick);
+		this.connection = new IRC("irc.bizimdiyar.com", "6667", "TurkWeb", nick, password);
 		$.extend(this.connection.handlers, {
 			"PRIVMSG": function(msg) {
 				if (_this.muted.indexOf(msg.source.nick) == -1 ) {
@@ -72,9 +72,6 @@ var irc = {
 				}
 			},
 			"001": function(msg) {
-				if (_this.password) {
-					_this.changeNick(_this.currentNick + " " + _this.password);
-				}
 				_this.onConnected(true);
 			},
 			"002": function(msg) {

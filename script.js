@@ -65,7 +65,7 @@ var irc = {
 						_this.onBan(msg.target, msg.args.slice(1));
 						break;
 					case "-b":
-						_this.onUnban(msg.target, msg.args.slice(1).join(" "));
+						_this.onUnban(msg.target, msg.args.slice(1));
 						break;
 					default:
 						_this.onMode(msg.source.nick, msg.target, msg.args.join(" "));
@@ -122,6 +122,9 @@ var irc = {
 			"353": function(msg) {
 				_this.onNames(msg.args[1], msg.msg.split(" "));
 			},
+			"404": function(msg) {
+				_this.onMessageDeliveryFailed(msg.args[0], msg.msg);
+			},
 			"432": irc.onNickChangeRequest,
 			"433": irc.onNickChangeRequest,
 			"436": irc.onNickChangeRequest,
@@ -161,7 +164,8 @@ var irc = {
 				this.changeNick(tokens.slice(1).join(" "));
 				break;
 			case "ATTACH": // CR's nick registration.
-				this.connection.sendIrc("ATTACH" + tokens.slice(1).join(" "));
+				this.connection.sendIrc("ATTACH " + tokens.slice(1).join(" "));
+				break;
 			case "KICK":
 				this.kickNickFromChannel(tokens[0], tokens[1], tokens.slice(2).join(" "));
 				break;
@@ -273,25 +277,48 @@ var irc = {
 
 	messageText: function(coloredText) {
 		var no_colors = coloredText.replace(/(\x03\d{0,2}(,\d{0,2})?|\u200B)/g, '');
-		var plain_text = no_colors.replace(/[\x0F\x02\x16\x1F]/g, '');
+		var plain_text = no_colors.replace(/[\x1D\x0F\x02\x16\x1F]/g, '');
 		return plain_text;
 	},
 
 	messageColors: function(coloredText) {
 		var textPos = 0;
 		var colors = [];
+		var fg = undefined;
+		var bg = undefined;
 		for (var i = 0; i < coloredText.length; i++) {
 			if (coloredText[i] == "\x03") {
 				var color = coloredText.slice(i+1).match(/\d{0,2}(,\d{0,2})?/)[0].split(",");
 				var obj = {"start": textPos};
 				if (color[0] != "") {
-					obj.fg = irc.colorIrc2html(color[0]);
+					fg = irc.colorIrc2html(color[0]);
+					obj.fg = fg;
+				} else {
+					fg = undefined;
 				}
 				if (color.length >= 2) {
-					obj.bg = irc.colorIrc2html(color[1]);
+					bg = irc.colorIrc2html(color[1]);
+					obj.bg = bg;
+				} else {
+					fg = undefined;
 				}
 				colors.push(obj);
 				textPos -= color.join(",").length;
+			} else if (coloredText[i].match(/[\x1D\x0F\x02\x16\x1F]/)) {
+				var obj = {"start": textPos,
+					"style": {"\x0F": "plain",
+						"\x02": "bold",
+						"\x16": "reverse",
+						"\x1F": "underline",
+						"\x1D": "italic"}[coloredText[i]]};
+				if (coloredText[i] != "\x0F") {
+					if (fg) obj.fg = fg;
+					if (bg) obj.bg = bg;
+				} else {
+					fg = undefined;
+					bg = undefined;
+				}
+				colors.push(obj);
 			} else {
 				textPos++;
 			}
@@ -342,9 +369,10 @@ var irc = {
 	onVoice: function(channel, nick) {console.log("onVoice " + channel + " " + nick);},
 	onDevoice: function(channel, nick) {console.log("onDevoice " + channel + " " + nick);},
 	onKick: function(channel, nick) {console.log("onKick " + channel + " " + nick);},
-	onBan: function(nick, channel, message) {console.log("onBan " + nick + " " + channel + " " + message);},
-	onUnban: function(nick, channel, message) {console.log("onUnban " + nick + " " + channel + " " + message);},
+	onBan: function(channel, pattern) {console.log("onBan " + pattern + " " + channel);},
+	onUnban: function(channel, pattern) {console.log("onUnban " + pattern + " " + channel);},
 	onMode: function(nick, channel, message) {console.log("onMode " + nick + " " + channel + " " + message);},
+	onMessageDeliveryFailed: function(channel, error) {console.log("onMessageDeliveryFailed " + channel + " " + error);},
 	onNickChangeRequest: function(msg) {
 		console.log("onNickChangeRequest");
 		irc.changeNick("Guest");

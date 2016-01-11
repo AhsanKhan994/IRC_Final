@@ -2,6 +2,8 @@ var irc = {
 
 	muted: [],
 	blocked: [],
+	ips: {},
+	pendingban: [],
 	connection: undefined,
 	
 	ignoredStatuses: ["818", "819", // CR proprietary stuff
@@ -82,19 +84,37 @@ var irc = {
 				});
 			},
 			"311": function(msg) {
-				_this.onWhois(msg.target, msg.args.join(" ") + " " + msg.msg);
+				var nick = msg.args[0];
+				var ip = msg.args[2];
+				_this.ips[nick] = ip;
+				if (_this.pendingban[nick]) {
+					_this.banNickOnChannelByIP(nick, _this.pendingban[nick]);
+				} else {
+					_this.onWhois(msg.args[0], msg.args.slice(1).join(" ") + " " + msg.msg);
+				}
 			},
 			"312": function(msg) {
-				_this.onWhois(msg.target, msg.args[0] + " " + msg.msg);
+				if (!_this.pendingban[msg.args[0]]) {
+					_this.onWhois(msg.args[0], " " + msg.msg);
+				}
 			},
 			"313": function(msg) {
-				_this.onWhois(msg.target, msg.msg);
+				if (!_this.pendingban[msg.args[0]]) {
+					_this.onWhois(msg.args[0], " " + msg.msg);
+				}
 			},
 			"317": function(msg) {
-				_this.onWhois(msg.target, msg.args[0] + " " + msg.msg);
+				if (!_this.pendingban[msg.args[0]]) {
+					_this.onWhois(msg.args[0], " " + msg.msg);
+				}
+			},
+			"318": function(msg) { // WHOIS_END
+				_this.pendingban[nick] = false;
 			},
 			"319": function(msg) {
-				_this.onWhois(msg.target, msg.msg);
+				if (!_this.pendingban[msg.args[0]]) {
+					_this.onWhois(msg.args[0], " is on the following channels: " + msg.msg);
+				}
 			},
 			// Channel list
 			"321": function(msg) {
@@ -108,6 +128,9 @@ var irc = {
 			},
 			// Ban list
 			"367": function(msg) {
+				if (!_this.banList[msg.args[0]]) {
+					_this.banList[msg.args[0]] = [];
+				}
 				_this.banList[msg.args[0]].push({"channel": msg.args[0], "mask": msg.args[1]});
 			},
 			"368": function(msg) {
@@ -216,6 +239,16 @@ var irc = {
 
 	banNickOnChannel: function(nick, channel) {
 		this.connection.mode(channel, "+b "+nick);
+	},
+
+	banNickOnChannelByIP: function(nick, channel) {
+		var ip = this.ips[nick];
+		if (ip == undefined) {
+			this.pendingban[nick] = channel;
+			this.whoisNick(nick);
+		} else {
+			this.connection.mode(channel, "+b *!*@"+ip);
+		}
 	},
 
 	whoisNick: function(nick) {

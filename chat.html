@@ -15,7 +15,27 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
+
+<!--<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>-->
+
 <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+
+<!--
+<style>
+	* {
+    -webkit-box-sizing:inherit;
+    -moz-box-sizing: inherit;
+    box-sizing: inherit;
+	}
+	
+	.navbar
+	{
+		 -webkit-box-sizing: border-box;
+		-moz-box-sizing:  border-box;
+		box-sizing: border-box;
+	}
+</style>-->
 
 <Script>
 
@@ -228,10 +248,9 @@
 		<embed src="static/jSocket.swf?jSocket_1" width="0" height="0" name="socket">
 		</embed>
 	</object>
-  	
-		
+
 		<div id="loading-Bar">
-			<i class="fa fa-spinner fa-spin fa-3x fa-fw margin-bottom" style="color: #0088cc;"></i>
+			<center><img src="img/loading.gif"></center>
 		</div>
 		
         <div id="kiwi" class="theme_relaxed">
@@ -286,15 +305,15 @@
 									</ul>
 								</li>
 								
-								<!--<li class="hasSubMenu3"><span class="menuOptions">CTCP</span> <span class="arrow">&#9658;</span>
+								<li class="hasSubMenu3"><span class="menuOptions">Themes</span> <span class="arrow">&#9658;</span>
 					 
 									<ul id="SubdropDownOptions3">
-										<li onclick="pingSelectedNick()"><span class="menuOptions">Ping</span></li>
-										<li onclick="dateSelectedNick()"><span class="menuOptions">Date</span></li>
-										<li onclick="versionSelectedNick()"><span class="menuOptions">Version</span></li>
-										<li><span class="menuOptions">Finger</span></li>
+										<li onclick="setCookie('themeIrcLPS','Default',30)"><span class="menuOptions">Default</span></li>
+										<li onclick="setCookie('themeIrcLPS','Love',30)"><span class="menuOptions">Love</span></li>
+										<li onclick="setCookie('themeIrcLPS','Hallo',30)"><span class="menuOptions">Halloween</span></li>	
+										<li onclick="setCookie('themeIrcLPS','Happ',30)"><span class="menuOptions">Happiness</span></li>
 									</ul>
-								</li>-->
+								</li>
 								
 								<li onclick="clearArea()"><span class="menuOptions">Clear Screen</span></li>
 							</ul>
@@ -734,7 +753,7 @@
 			
 			$(".full_screen_icon").addClass("small_screen_icon");
 			
-			if($(".close_icon1").hasClass("privateMsgPerson"))
+			if($(".active").hasClass("privateMsgTAb"))
 			{
 				$(".messages").css({"width":"98%","top":"0px","height": "473px"});
 			}
@@ -797,7 +816,7 @@
 			
 			$(".full_screen_icon").removeClass("small_screen_icon");
 			
-			if($(".close_icon1").hasClass("privateMsgPerson"))
+			if($(".active").hasClass("privateMsgTAb"))
 			{
 				$(".messages").css({"width":"98%","top":"14px","height": "461px"});
 				$(".panel-header-settings").css({"width":"98%","top":"14px"});
@@ -835,6 +854,18 @@
 			$(".messages").css({"height":"460px"});
 									
 			full=0;
+		}
+		
+		try{
+			var theme=getCookie("themeIrcLPS");
+		
+			if(theme!=""&&theme!="Default"){
+				changeThisTheme();
+			}
+		}
+		
+		catch(e){
+			console.log(e);
 		}
 	}
 	
@@ -1020,6 +1051,7 @@
 
 <script src="js/jsocket.js" type="text/javascript"></script>
 <script src="js/irc.protocol.js" type="text/javascript"></script>
+<script src="js/themes.js" type="text/javascript"></script>
 <script src="script.js" type="text/javascript"></script>
 <script src="scriptFunctions.js" type="text/javascript"></script>
 	

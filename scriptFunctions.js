@@ -5,6 +5,10 @@
 	
 	if(evt.target.id!="close")
 	{
+		if(!$(".close_icon1").hasClass("close_icon1_img")){
+			$(".messages").css({"width":"79.9%"});
+		}
+		
 		$(".close_icon1").css("opacity","1");
 		$(".close_icon1").css("pointer-events", "inherit");
 
@@ -82,6 +86,9 @@ function sendMessage(toSnd,Msg,color,fg,bg,commandd)
 		var n = d.getHours();
 		var m = d.getMinutes();
 		
+		if(n<10){n="0"+n;};
+		if(m<10){m="0"+m;};
+		
 		$('#textInput').val('');
 		
 		var msgID=channelName+"MsgArea";
@@ -89,7 +96,7 @@ function sendMessage(toSnd,Msg,color,fg,bg,commandd)
 		bg=irc.colorIrc2html(bg);
 		fg=irc.colorIrc2html(fg);
 		
-		$("#"+msgID+" .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 1.3;">['+n+':'+m+']</div><div class="nick" style="color:#37971a;line-height: 1.3;">&lt;'+userName+'&gt;</div><div class="text" style="line-height: 1.3;"><span style=" background:'+bg+';color:'+fg+';">'+Msg+'</span></div></div>');
+		$("#"+msgID+" .messages").append('<div class="msg privmsg"><div class="time">['+n+':'+m+']</div><div class="nick" style="color:#37971a;">&lt;'+userName+'&gt;</div><div class="text"><span style=" background:'+bg+';color:'+fg+';">'+Msg+'</span></div></div>');
 		
 		
 		//$("#"+msgID+ " .messages").animate({ scrollTop: $(document).height() }, "fast");
@@ -148,6 +155,10 @@ function closeThisTab(id,channelName)
 	{
 		$(".close_icon1").css("opacity","1");
 		$(".close_icon1").css("pointer-events", "inherit");
+	}
+	
+	if(!$(".close_icon1").hasClass("close_icon1_img")&&!$("#joinedChannels>li:last").hasClass("privateMsgTAb")){
+			$(".messages").css({"width":"79.9%"});
 	}
 }
 
@@ -217,12 +228,13 @@ function clearArea()
 		id=id.replace("@","AD");
 		id=id.replace("`","CM");
 
-	$("#"+id+"MsgArea .messages").html('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time" style="color:#DB8030;">---------</div><div class="nick" style="color:#DB8030;">Screen Cleared</div><div class="time" style="color:#DB8030;">---------</div></div><br>');
+	$("#"+id+"MsgArea .messages").html('<div class="msg privmsg"><div class="time" style="color:#DB8030;">---------</div><div class="nick" style="color:#DB8030;">Screen Cleared</div><div class="text" style="color:#DB8030;">---------</div></div>');
 			
 }
 
 function whoisSelectedNick()
 {
+	prev_name="";
 	
 	var nickName=$("li.nickSelected .nick .nickName").text().replace("@","").replace("+","");
 			
@@ -258,6 +270,10 @@ function changeNicktoNew(nick)
 function joinChannel()
 {
 	var channel=$("#joinChan .inp").val();
+	
+	if(channel[0]!=="#"){
+		channel="#"+channel;
+	}
 
 		if(channel!=="")
 		{
@@ -336,7 +352,14 @@ function showSndMsgPrvt()
 		}
 		
 		$("#"+nickName+"MsgArea .messages").css("width","98%");
+		
+		if($(".full_screen_icon").hasClass("small_screen_icon")){
+			full=0;
+			make_FullScreen();
+		}
 	}
+	
+	changeThisTheme();
 }
 
 function showThisPrvtTab(i,evt)
@@ -375,6 +398,8 @@ function showThisPrvtTab(i,evt)
 		$(".close_icon1").css("opacity","1");
 		$(".close_icon1").css("pointer-events", "inherit");
 	}
+	
+	
 }
 
 function ignoreHim()
@@ -401,8 +426,12 @@ function ignoreHim()
 					var d = new Date();
 					var n = d.getHours();
 					var m = d.getMinutes();
+				
+					if(n<10){n="0"+n;};
+					if(m<10){m="0"+m;};
+		
 					
-					$("#"+id+"MsgArea .messages").append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #FD723B;width: auto;font-size: 14px;">→ </div><div class="nick" style="color:font-weight: bold;color: #FD723B;text-transform: lowercase;">Your are not ignoring</div><div class="time" style="font-weight: bold;color: #FD723B;font-size: 14px;width: auto;padding-left: 0px;">'+nickShow+'</div></div><br>');
+					$("#"+id+"MsgArea .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #FD723B;width: auto;font-size: 14px;">→ </div><div class="nick" style="font-weight: bold;color: #FD723B;text-transform: lowercase;">You are not ignoring</div><div class="text" style="font-weight: bold;color: #FD723B;font-size: 14px;width: auto;padding-left: 0px;">'+nickShow+'</div></div>');
 					
 					$(this).closest(".mode").removeClass("ignoreHim");
 					
@@ -431,7 +460,10 @@ function ignoreHim()
 					var n = d.getHours();
 					var m = d.getMinutes();
 					
-					$("#"+id+"MsgArea .messages").append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #FD723B;width: auto;font-size: 14px;">→ </div><div class="nick" style="color:font-weight: bold;color: #FD723B;text-transform: lowercase;">Your are ignoring</div><div class="time" style="font-weight: bold;color: #FD723B;font-size: 14px;width: auto;padding-left: 0px;">'+nickShow+'</div></div><br>');
+					if(n<10){n="0"+n;};
+					if(m<10){m="0"+m;};
+		
+					$("#"+id+"MsgArea .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #FD723B;width: auto;font-size: 14px;">→ </div><div class="nick" style="font-weight: bold;color: #FD723B;text-transform: lowercase;">You are ignoring</div><div class="text" style="font-weight: bold;color: #FD723B;font-size: 14px;width: auto;padding-left: 0px;">'+nickShow+'</div></div>');
 					
 					$(this).closest(".mode").addClass("ignoreHim");
 					
@@ -457,7 +489,7 @@ function makeOper(n)
 		if(n==2)
 		{
 								
-			var	id=channelName.replace("+","P");
+			/*var	id=channelName.replace("+","P");
 				id=id.replace("#","");
 				id=id.replace(".","D");
 				id=id.replace("*","M");
@@ -471,12 +503,12 @@ function makeOper(n)
 					var n = d.getHours();
 					var m = d.getMinutes();
 					
-					$("#"+id+"MsgArea .messages").append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #FD723B;width: auto;font-size: 14px;">→ MODE '+channelName+'</div><div class="nick" style="color:font-weight: bold;color: #FD723B;text-transform: lowercase;">  :-o </div><div class="time" style="font-weight: bold;color: #FD723B;font-size: 14px;width: auto;padding-left: 0px;">'+nickShow+'</div></div><br>');
+					$("#"+id+"MsgArea .messages").append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #FD723B;width: auto;font-size: 14px;">→ MODE '+channelName+'</div><div class="nick" style="color:font-weight: bold;color: #FD723B;text-transform: lowercase;">  :-o </div><div class="time" style="font-weight: bold;color: #FD723B;font-size: 14px;width: auto;padding-left: 0px;">'+nickShow+'</div></div><br>');*/
 					
 					//$(this).closest(".mode").removeClass("ignoreHim");
 					
 					
-					$("#"+id+"MsgArea .messages")[0].scrollTop=$("#"+id+"MsgArea .messages")[0].scrollHeight;
+					//$("#"+id+"MsgArea .messages")[0].scrollTop=$("#"+id+"MsgArea .messages")[0].scrollHeight;
 				
 		
 			
@@ -486,7 +518,7 @@ function makeOper(n)
 		else
 		{
 									
-			var	id=channelName.replace("+","P");
+			/*var	id=channelName.replace("+","P");
 				id=id.replace("#","");
 				id=id.replace(".","D");
 				id=id.replace("*","M");
@@ -500,12 +532,12 @@ function makeOper(n)
 					var n = d.getHours();
 					var m = d.getMinutes();
 					
-					$("#"+id+"MsgArea .messages").append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #FD723B;width: auto;font-size: 14px;">→ MODE '+channelName+'</div><div class="nick" style="color:font-weight: bold;color: #FD723B;text-transform: lowercase;">  :+o </div><div class="time" style="font-weight: bold;color: #FD723B;font-size: 14px;width: auto;padding-left: 0px;">'+nickShow+'</div></div><br>');
+					$("#"+id+"MsgArea .messages").append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #FD723B;width: auto;font-size: 14px;">→ MODE '+channelName+'</div><div class="nick" style="color:font-weight: bold;color: #FD723B;text-transform: lowercase;">  :+o </div><div class="time" style="font-weight: bold;color: #FD723B;font-size: 14px;width: auto;padding-left: 0px;">'+nickShow+'</div></div><br>');*/
 					
 					//$(this).closest(".mode").addClass("ignoreHim");
 					
 					
-					$("#"+id+"MsgArea .messages")[0].scrollTop=$("#"+id+"MsgArea .messages")[0].scrollHeight;
+					//$("#"+id+"MsgArea .messages")[0].scrollTop=$("#"+id+"MsgArea .messages")[0].scrollHeight;
 				
 		
 			
@@ -526,7 +558,7 @@ function voiceDevoiceOper(n)
 		if(n==2)
 		{
 										
-			var	id=channelName.replace("+","P");
+			/*var	id=channelName.replace("+","P");
 				id=id.replace("#","");
 				id=id.replace(".","D");
 				id=id.replace("*","M");
@@ -540,11 +572,11 @@ function voiceDevoiceOper(n)
 					var n = d.getHours();
 					var m = d.getMinutes();
 					
-					$("#"+id+"MsgArea .messages").append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #FD723B;width: auto;font-size: 14px;">→ MODE '+channelName+'</div><div class="nick" style="color:font-weight: bold;color: #FD723B;text-transform: lowercase;">  :-v </div><div class="time" style="font-weight: bold;color: #FD723B;font-size: 14px;width: auto;padding-left: 0px;">'+nickShow+'</div></div><br>');
+					$("#"+id+"MsgArea .messages").append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #FD723B;width: auto;font-size: 14px;">→ MODE '+channelName+'</div><div class="nick" style="color:font-weight: bold;color: #FD723B;text-transform: lowercase;">  :-v </div><div class="time" style="font-weight: bold;color: #FD723B;font-size: 14px;width: auto;padding-left: 0px;">'+nickShow+'</div></div><br>');*/
 					
 					//$(this).closest(".mode").removeClass("ignoreHim");
 					
-					$("#"+id+"MsgArea .messages")[0].scrollTop=$("#"+id+"MsgArea .messages")[0].scrollHeight;
+					//$("#"+id+"MsgArea .messages")[0].scrollTop=$("#"+id+"MsgArea .messages")[0].scrollHeight;
 					
 					$("li.nickSelected .nick .nickName").attr("data-voice","devoice");
 					//$("li.nickSelected").css("background","rgb(255, 80, 80)"); 
@@ -558,7 +590,7 @@ function voiceDevoiceOper(n)
 		else
 		{
 							
-			var	id=channelName.replace("+","P");
+			/*var	id=channelName.replace("+","P");
 				id=id.replace("#","");
 				id=id.replace(".","D");
 				id=id.replace("*","M");
@@ -572,11 +604,11 @@ function voiceDevoiceOper(n)
 					var n = d.getHours();
 					var m = d.getMinutes();
 					
-					$("#"+id+"MsgArea .messages").append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #FD723B;width: auto;font-size: 14px;">→ MODE '+channelName+'</div><div class="nick" style="color:font-weight: bold;color: #FD723B;text-transform: lowercase;">  :+v </div><div class="time" style="font-weight: bold;color: #FD723B;font-size: 14px;width: auto;padding-left: 0px;">'+nickShow+'</div></div><br>');
+					$("#"+id+"MsgArea .messages").append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #FD723B;width: auto;font-size: 14px;">→ MODE '+channelName+'</div><div class="nick" style="color:font-weight: bold;color: #FD723B;text-transform: lowercase;">  :+v </div><div class="time" style="font-weight: bold;color: #FD723B;font-size: 14px;width: auto;padding-left: 0px;">'+nickShow+'</div></div><br>');*/
 					
 					//$(this).closest(".mode").addClass("ignoreHim");
 					
-					$("#"+id+"MsgArea .messages")[0].scrollTop=$("#"+id+"MsgArea .messages")[0].scrollHeight;
+					//$("#"+id+"MsgArea .messages")[0].scrollTop=$("#"+id+"MsgArea .messages")[0].scrollHeight;
 					
 					$("li.nickSelected .nick .nickName").attr("data-voice","voice");
 					$("li.nickSelected").removeAttr("style"); 
@@ -611,14 +643,17 @@ function banNickIrc()
 					var n = d.getHours();
 					var m = d.getMinutes();
 					
-					$("#"+id+"MsgArea .messages").append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #FD723B;width: auto;font-size: 14px;">→ MODE '+channelName+'</div><div class="nick" style="color:font-weight: bold;color: #FD723B;text-transform: lowercase;">  :+b </div><div class="time" style="font-weight: bold;color: #FD723B;font-size: 14px;width: auto;padding-left: 0px;">'+nickShow+'</div></div><br>');
+					if(n<10){n="0"+n;};
+					if(m<10){m="0"+m;};
+		
+					$("#"+id+"MsgArea .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #FD723B;width: auto;font-size: 14px;">→ MODE '+channelName+'</div><div class="nick" style="font-weight: bold;color: #FD723B;text-transform: lowercase;">  :+b </div><div class="text" style="font-weight: bold;color: #FD723B;font-size: 14px;width: auto;padding-left: 0px;">'+nickShow+'</div></div>');
 					
 					$("#"+id+"MsgArea .messages")[0].scrollTop=$("#"+id+"MsgArea .messages")[0].scrollHeight;
 					
 					//$(this).closest(".mode").removeClass("ignoreHim");
 		
 			
-			irc.banNickOnChannel(nickShow,channelName);
+			irc.banNickOnChannelByIP(nickShow,channelName);
 			
 		
 	}
@@ -631,7 +666,7 @@ function kickNickIrc()
 	
 	if(nickShow!=undefined)
 	{										
-			var	id=channelName.replace("+","P");
+			/*var	id=channelName.replace("+","P");
 				id=id.replace("#","");
 				id=id.replace(".","D");
 				id=id.replace("*","M");
@@ -644,10 +679,10 @@ function kickNickIrc()
 					var d = new Date();
 					var n = d.getHours();
 					var m = d.getMinutes();
+				*/	
+					//$("#"+id+"MsgArea .messages").append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #FD723B;width: auto;font-size: 14px;">→ MODE '+channelName+'</div><div class="nick" style="color:font-weight: bold;color: #FD723B;text-transform: lowercase;">  :+k </div><div class="time" style="font-weight: bold;color: #FD723B;font-size: 14px;width: auto;padding-left: 0px;">'+nickShow+'</div></div><br>');
 					
-					$("#"+id+"MsgArea .messages").append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #FD723B;width: auto;font-size: 14px;">→ MODE '+channelName+'</div><div class="nick" style="color:font-weight: bold;color: #FD723B;text-transform: lowercase;">  :+k </div><div class="time" style="font-weight: bold;color: #FD723B;font-size: 14px;width: auto;padding-left: 0px;">'+nickShow+'</div></div><br>');
-					
-					$("#"+id+"MsgArea .messages")[0].scrollTop=$("#"+id+"MsgArea .messages")[0].scrollHeight;
+					//$("#"+id+"MsgArea .messages")[0].scrollTop=$("#"+id+"MsgArea .messages")[0].scrollHeight;
 					
 					//$(this).closest(".mode").removeClass("ignoreHim");
 		
@@ -658,9 +693,6 @@ function kickNickIrc()
 	}
 }
 
-// Callbacks
-
-
 var Channels=["#EZZ","#yarisma","#sohbet"];//,"#carsaf.nl","#35+","#ask","#gurbet","#radyo"];
 
 irc.onStartConnect = function() {
@@ -668,15 +700,22 @@ irc.onStartConnect = function() {
 
 		$(".kickOut").css("display","none");
 		$(".mute").css("display","none");
+	
 }
 
 irc.onConnected = function(success) {console.log("onConnected " + success);
 	irc.joinChannel(Channels);
 	//userName=new_nick;
 		$("#myNick").html(userName.charAt(0).toUpperCase() + userName.slice(1));
+		
 };
 	
 irc.onMessage = function(who, where, text) {console.log("onMessage " + who + " " + where + " " + text);
+
+	// Colored text support
+	//var colors=irc.messageColors(text);
+	//var text=irc.messageText(text);
+	//console.log(colors);
 	
 	var colors=irc.messageColors(text);
 	text=irc.messageText(text);
@@ -754,6 +793,10 @@ irc.onMessage = function(who, where, text) {console.log("onMessage " + who + " "
 		var d = new Date();
 		var n = d.getHours();
 		var m = d.getMinutes();
+					
+		if(n<10){n="0"+n;};
+		if(m<10){m="0"+m;};
+		
 
 		//$('#textInput').val('');
 
@@ -761,7 +804,7 @@ irc.onMessage = function(who, where, text) {console.log("onMessage " + who + " "
 		
 		if(colors.length<1){text2=text;};
 
-		$("#"+msgID+" .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 1.3;">['+n+':'+m+']</div><div class="nick" style="color:#20A0B5;line-height: 1.3;">&lt;'+who+'&gt;</div><div class="text" style="line-height: 1.3;">'+text2+'</div></div>');
+		$("#"+msgID+" .messages").append('<div class="msg privmsg"><div class="time">['+n+':'+m+']</div><div class="nick" style="color:#20A0B5;">&lt;'+who+'&gt;</div><div class="text">'+text2+'</div></div>');
 
 		//$("#"+msgID+ " .messages").animate({ scrollTop: $(this).scrollHeight }, "fast");
 
@@ -828,11 +871,17 @@ irc.onMessage = function(who, where, text) {console.log("onMessage " + who + " "
 
 			$(".close_icon1").css("opacity","0.7");
 			$(".close_icon1").css("pointer-events", "none");
+			
+			changeThisTheme();
 		}
 
 		var d = new Date();
 		var n = d.getHours();
 		var m = d.getMinutes();
+					
+		if(n<10){n="0"+n;};
+		if(m<10){m="0"+m;};
+		
 
 		//$('#textInput').val('');
 
@@ -845,18 +894,36 @@ irc.onMessage = function(who, where, text) {console.log("onMessage " + who + " "
 		//$("#"+msgID+ " .messages").animate({ scrollTop: $(this).scrollHeight }, "fast");
 
 		$("#"+msgID+ " .messages")[0].scrollTop=$("#"+msgID+ " .messages")[0].scrollHeight;
+		
+		if($(".full_screen_icon").hasClass("small_screen_icon")){
+			full=0;
+			make_FullScreen();
+		}
 	}
 };
 
-irc.onWhois = function(who, data) {console.log("onWhois " + who + " " + data);
+var prev_name;
 
+irc.onWhois = function(who, data) {console.log("onWhois " + who + " " + data);
+	
+	if(prev_name!=who){
+		$(".activeMsgWindow .messages").append('<div class="msg privmsg"><div class="time" style="color:#DB8030;width: auto;">-@-</div><div class="nick" style="color:#DB8030;padding-right: 0px;">&nbsp;WHOIS&nbsp;</div><div class="text" style="color:#DB8030;">-@-</div></div>');
+	}
+	
+	prev_name=who;
+	
 	var d = new Date();
 	var n = d.getHours();
 	var m = d.getMinutes();
-
+	
+	if(n<10){n="0"+n;};
+	if(m<10){m="0"+m;};
+	
 	var nickName=$("li.nickSelected .nick .nickName").text();
 
-	$(".activeMsgWindow .messages").append('<div class="msg whois  nick_416873616e"><div class="time">['+n+':'+m+']</div><div class="nick" style="color:#1a2597;">&lt;'+nickName+'&gt;</div><div class="text" style=""><span class="inline-nick" style=";cursor:pointer;"></span> '+data+' </div></div>');
+	$(".activeMsgWindow .messages").append('<div class="msg whois  nick_416873616e"><div class="time" style="line-height: 1.4;">['+n+':'+m+']</div><div class="nick" style="color:#1a2597;font-weight:bold;">['+nickName+']</div><div class="text" style=""><span class="inline-nick" style=";cursor:pointer;">'+data+'</span></div></div>');
+	$(".activeMsgWindow .messages")[0].scrollTop=$(".activeMsgWindow .messages")[0].scrollHeight;
+	
 	$(".activeMsgWindow .messages")[0].scrollTop=$(".activeMsgWindow .messages")[0].scrollHeight;
 
 };
@@ -879,6 +946,10 @@ irc.onJoin = function(who, where) {console.log("onJoin " + who + " " + where);//
 		var d = new Date();
 	var n = d.getHours();
 	var m = d.getMinutes();
+					
+		if(n<10){n="0"+n;};
+		if(m<10){m="0"+m;};
+		
 	//alert(who);
 	var rightBar="";
 
@@ -915,7 +986,7 @@ irc.onJoin = function(who, where) {console.log("onJoin " + who + " " + where);//
 
 
 	//console.log("#"+channelName+"MsgArea .messages");
-	$("#"+channelName+"MsgArea .messages").append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #FD723B;width: auto;font-size: 14px;">→ '+who+' </div><div class="nick" style="color:font-weight: bold;color: #FD723B;text-transform: lowercase;">has joined</div><div class="time" style="font-weight: bold;color: #FD723B;font-size: 14px;width: auto;padding-left: 0px;">'+where+'</div></div><br>');
+	$("#"+channelName+"MsgArea .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #FD723B;width: auto;font-size: 14px;">→ '+who+' </div><div class="nick" style="font-weight: bold;color: #FD723B;text-transform: lowercase;">has joined</div><div class="text" style="font-weight: bold;color: #FD723B;font-size: 14px;width: auto;padding-left: 0px;">'+where+'</div></div>');
 	
 	if($("#"+channelName+"MsgArea .messages").length!=0){
 		$("#"+channelName+"MsgArea .messages")[0].scrollTop=$("#"+channelName+"MsgArea .messages")[0].scrollHeight;
@@ -935,11 +1006,15 @@ irc.onPart = function(who, where, message) {console.log("onPart " + who + " " + 
 	channelName=channelName.replace("%","Md");
 	channelName=channelName.replace("@","AD");
 		channelName=channelName.replace("`","CM");
-	channelName=channelName.replace(/(?:\r\n|\r|\n)/g, '')
+	channelName=channelName.replace(/(?:\r\n|\r|\n)/g, '');
 
 		var d = new Date();
 	var n = d.getHours();
 	var m = d.getMinutes();
+					
+		if(n<10){n="0"+n;};
+		if(m<10){m="0"+m;};
+		
 
 	$("#"+channelName+"Persons ul li").map(function(i,d){
 
@@ -964,7 +1039,7 @@ irc.onPart = function(who, where, message) {console.log("onPart " + who + " " + 
 
 			if($("#"+who+"MsgArea").length!=0)
 			{
-				$("#"+who+"MsgArea .messages").append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #B30000;width: auto;font-size: 14px;">← '+who+' </div><div class="nick" style="color:font-weight: bold;color: #B30000;text-transform: lowercase;">has leaved this channel [</div><div class="time" style="font-weight: bold;color: #B30000;font-size: 14px;width: auto;padding-left: 0px;">'+where+']</div></div><br>');
+				$("#"+who+"MsgArea .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #B30000;width: auto;font-size: 14px;">← '+who+' </div><div class="nick" style="font-weight: bold;color: #B30000;text-transform: lowercase;">has leaved this channel [</div><div class="text" style="font-weight: bold;color: #B30000;font-size: 14px;width: auto;padding-left: 0px;">'+where.replace(/(?:\r\n|\r|\n)/g, '').replace(" ","")+' ]</div></div>');
 				$("#"+who+"MsgArea .messages")[0].scrollTop=$("#"+who+"MsgArea .messages")[0].scrollHeight;
 			}
 		}
@@ -975,7 +1050,7 @@ irc.onPart = function(who, where, message) {console.log("onPart " + who + " " + 
 
 	if($("#"+channelName+"MsgArea .messages").length!=0){
 		//console.log("#"+channelName+"MsgArea .messages");
-		$("#"+channelName+"MsgArea .messages").append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #B30000;width: auto;font-size: 14px;">← '+who+' </div><div class="nick" style="color:font-weight: bold;color: #B30000;text-transform: lowercase;">has leaved this channel [</div><div class="time" style="font-weight: bold;color: #B30000;font-size: 14px;width: auto;padding-left: 0px;">'+where+']</div></div><br>');
+		$("#"+channelName+"MsgArea .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #B30000;width: auto;font-size: 14px;">← '+who+' </div><div class="nick" style="font-weight: bold;color: #B30000;text-transform: lowercase;">has leaved this channel [</div><div class="text" style="font-weight: bold;color: #B30000;font-size: 14px;width: auto;padding-left: 0px;">'+where.replace(/(?:\r\n|\r|\n)/g, '').replace(" ","")+' ]</div></div>');
 		$("#"+channelName+"MsgArea .messages")[0].scrollTop=$("#"+channelName+"MsgArea .messages")[0].scrollHeight;
 	}
 };
@@ -988,6 +1063,10 @@ irc.onQuit = function(who, message) {console.log("onQuit " + who + " " + message
 	var d = new Date();
 	var n = d.getHours();
 	var m = d.getMinutes();
+					
+		if(n<10){n="0"+n;};
+		if(m<10){m="0"+m;};
+		
 
 	$(".PersonsArea ul li").map(function(i,d){
 
@@ -1015,7 +1094,7 @@ irc.onQuit = function(who, message) {console.log("onQuit " + who + " " + message
 
 			$(this).remove();
 
-			$("#"+id).append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #B30000;width: auto;font-size: 14px;">← '+who+' </div><div class="nick" style="color:font-weight: bold;color: #B30000;text-transform: lowercase;">has quit (Connection Closed)  </div><div class="time" style="font-weight: bold;color: #B30000;font-size: 14px;width: auto;padding-left: 0px;"></div></div><br>');
+			$("#"+id).append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #B30000;width: auto;font-size: 14px;">← '+who+' </div><div class="text" style="font-weight: bold;color: #B30000;text-transform: lowercase;">has quit (Connection Closed)  </div></div>');
 			
 			$("#"+id)[0].scrollTop=$("#"+id)[0].scrollHeight;
 
@@ -1023,7 +1102,7 @@ irc.onQuit = function(who, message) {console.log("onQuit " + who + " " + message
 			{
 				chckI++;
 
-				$("#"+who+"MsgArea .messages").append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #B30000;width: auto;font-size: 14px;">← '+who+' </div><div class="nick" style="color:font-weight: bold;color: #B30000;text-transform: lowercase;">has quit (Connection Closed)  </div><div class="time" style="font-weight: bold;color: #B30000;font-size: 14px;width: auto;padding-left: 0px;"></div></div><br>');
+				$("#"+who+"MsgArea .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #B30000;width: auto;font-size: 14px;">← '+who+' </div><div class="text" style="font-weight: bold;color: #B30000;text-transform: lowercase;">has quit (Connection Closed)  </div></div>');
 				$("#"+who+"MsgArea .messages")[0].scrollTop=$("#"+who+"MsgArea .messages")[0].scrollHeight;
 			}
 		}
@@ -1109,8 +1188,10 @@ irc.onTopic = function(channel, topic) {console.log("onTopic " + channel + " " +
 		
 		if(colors.length<1){text2=text;};
 
-		$("#"+msgID+" .messages").append('<div class="msg privmsg" style="border:2px dotted #D4A516;"><div class="time" style="color: #FFED00;font-weight: bold;font-size: 16px;line-height: 1.3;">Topic</div><div class="nick" style="color:#FFFFFF;line-height: 1.3;">&lt;'+channel+'&gt;</div><div class="text" style="background: #3087EC;color:#fff;line-height: 1.3;">'+text2+'</div></div>');
+		$("#"+msgID+" .messages").append('<div class="msg privmsg TopicName" style="margin-top: 0px;position: relative;border:2px dotted #D4A516;"><div class="time" style="color: #FFED00;font-weight: bold;font-size: 16px;line-height: 1.3;">Topic</div><div class="nick" style="color:#FFFFFF;line-height: 1.3;">&lt;'+channel+'&gt;</div><div class="text" style="background: #3087EC;color:#fff;line-height: 1.3;">'+text2+'</div></div>');
+		changeThisTheme();
 	},1000);
+
 };
 	
 irc.onNick = function(old_nick, new_nick) {console.log("onNick " + old_nick + " " + new_nick);
@@ -1126,8 +1207,12 @@ irc.onNick = function(old_nick, new_nick) {console.log("onNick " + old_nick + " 
 		var d = new Date();
 		var n = d.getHours();
 		var m = d.getMinutes();
+					
+		if(n<10){n="0"+n;};
+		if(m<10){m="0"+m;};
+		
 
-		$("#"+old_nick+"MsgArea .messages").append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #FD723B;width: auto;font-size: 14px;">→ '+old_nick+' </div><div class="nick" style="color:font-weight: bold;color: #FD723B;text-transform: lowercase;">is known as</div><div class="time" style="font-weight: bold;color: #FD723B;font-size: 14px;width: auto;padding-left: 0px;">'+new_nick+'</div></div><br>' + '<div class="time" style="border: 2px dotted #B30000;font-weight: bold;padding-right: 5px;color: #B30000;width: auto;font-size: 14px;">Due to change of his name you cannot send him message from this window.Kindly close this window.Thanks</div>');
+		$("#"+old_nick+"MsgArea .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #FD723B;width: auto;font-size: 14px;">→ '+old_nick+' </div><div class="nick" style="font-weight: bold;color: #FD723B;text-transform: lowercase;">is known as</div><div class="nick" style="font-weight: bold;color: #FD723B;font-size: 14px;width: auto;padding-left: 0px;">'+new_nick+'</div></div><br>' + '<div class="text" style="border: 2px dotted #B30000;font-weight: bold;padding-right: 5px;color: #B30000;width: auto;font-size: 14px;">Due to change of his name you cannot send him message from this window.Kindly close this window.Thanks</div>');
 		
 		$("#"+old_nick+"MsgArea .messages")[0].scrollTop=$("#"+old_nick+"MsgArea .messages")[0].scrollHeight;
 	}
@@ -1147,8 +1232,12 @@ irc.onNick = function(old_nick, new_nick) {console.log("onNick " + old_nick + " 
 			var d = new Date();
 			var n = d.getHours();
 			var m = d.getMinutes();
+					
+			if(n<10){n="0"+n;};
+			if(m<10){m="0"+m;};
+			
 
-			$("#"+id+"MsgArea .messages").append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #FD723B;width: auto;font-size: 14px;">→ '+old_nick+' </div><div class="nick" style="color:font-weight: bold;color: #FD723B;text-transform: lowercase;">is known as</div><div class="time" style="font-weight: bold;color: #FD723B;font-size: 14px;width: auto;padding-left: 0px;">'+new_nick+'</div></div><br>');
+			$("#"+id+"MsgArea .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #FD723B;width: auto;font-size: 14px;">→ '+old_nick+' </div><div class="nick" style="font-weight: bold;color: #FD723B;text-transform: lowercase;">is known as</div><div class="text" style="font-weight: bold;color: #FD723B;font-size: 14px;width: auto;padding-left: 0px;">'+new_nick+'</div></div>');
 			
 			$("#"+id+"MsgArea .messages")[0].scrollTop=$("#"+id+"MsgArea .messages")[0].scrollHeight;
 
@@ -1196,8 +1285,12 @@ irc.onOp= function(channel, nick) {console.log("onOp " + channel + " " + nick);
 				var d = new Date();
 				var n = d.getHours();
 				var m = d.getMinutes();
+					
+				if(n<10){n="0"+n;};
+				if(m<10){m="0"+m;};
+		
 
-				$(channel+"MsgArea .messages").append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #9C2C00;width: auto;font-size: 14px;">→ '+nick+' </div><div class="nick" style="color:font-weight: bold;color: #9C2C00;text-transform: lowercase;">is set as Operator</div><div class="time" style="font-weight: bold;color: #9C2C00;font-size: 14px;width: auto;padding-left: 0px;">(+o)</div></div><br>');
+				$(channel+"MsgArea .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #9C2C00;width: auto;font-size: 14px;">→ '+nick+' </div><div class="nick" style="font-weight: bold;color: #9C2C00;text-transform: lowercase;">is set as Operator</div><div class="text" style="font-weight: bold;color: #9C2C00;font-size: 14px;width: auto;padding-left: 0px;">(+o)</div></div>');
 				
 				$(channel+"MsgArea .messages")[0].scrollTop=$(channel+"MsgArea .messages")[0].scrollHeight;
 
@@ -1245,8 +1338,12 @@ irc.onDeop= function(channel, nick) {console.log("onDeop " + channel + " " + nic
 				var d = new Date();
 				var n = d.getHours();
 				var m = d.getMinutes();
+					
+				if(n<10){n="0"+n;};
+				if(m<10){m="0"+m;};
+		
 
-				$(channel+"MsgArea .messages").append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #545454;width: auto;font-size: 14px;">→ '+nick+' </div><div class="nick" style="color:font-weight: bold;color: #545454;text-transform: lowercase;">is removed from Operator (Deoperator)</div><div class="time" style="font-weight: bold;color: #545454;font-size: 14px;width: auto;padding-left: 0px;">(-o)</div></div><br>');
+				$(channel+"MsgArea .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #545454;width: auto;font-size: 14px;">→ '+nick+' </div><div class="nick" style="font-weight: bold;color: #545454;text-transform: lowercase;">is removed from Operator (Deoperator)</div><div class="text" style="font-weight: bold;color: #545454;font-size: 14px;width: auto;padding-left: 0px;">(-o)</div></div>');
 				
 				$(channel+"MsgArea .messages")[0].scrollTop=$(channel+"MsgArea .messages")[0].scrollHeight;
 
@@ -1270,15 +1367,21 @@ irc.onVoice= function(channel, nick) {console.log("onVoice " + channel + " " + n
 				$(this).before('<span class="prefix">+</span>');
 				//alert('voice');
 				
+				$($(this).closest(".mode")).insertAfter(channel+"Persons .o:last");
+				
 				$(this).html(nick);
 
 				var d = new Date();
 				var n = d.getHours();
 				var m = d.getMinutes();
+					
+				if(n<10){n="0"+n;};
+				if(m<10){m="0"+m;};
+		
 			
 				$(this).closest(".mode").addClass("v");
 
-				$(channel+"MsgArea .messages").append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #9C2C00;width: auto;font-size: 14px;">→ '+nick+' </div><div class="nick" style="color:font-weight: bold;color: #9C2C00;text-transform: lowercase;">has Voiced Now</div><div class="time" style="font-weight: bold;color: #9C2C00;font-size: 14px;width: auto;padding-left: 0px;">(+v)</div></div><br>');
+				$(channel+"MsgArea .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #9C2C00;width: auto;font-size: 14px;">→ '+nick+' </div><div class="nick" style="font-weight: bold;color: #9C2C00;text-transform: lowercase;">has Voiced Now</div><div class="text" style="font-weight: bold;color: #9C2C00;font-size: 14px;width: auto;padding-left: 0px;">(+v)</div></div>');
 				
 				$(channel+"MsgArea .messages")[0].scrollTop=$(channel+"MsgArea .messages")[0].scrollHeight;
 
@@ -1306,14 +1409,116 @@ irc.onDevoice= function(channel, nick) {console.log("onDevoice " + channel + " "
 				var d = new Date();
 				var n = d.getHours();
 				var m = d.getMinutes();
+					
+				if(n<10){n="0"+n;};
+				if(m<10){m="0"+m;};
+		
 
-				$(channel+"MsgArea .messages").append('<div class="msg privmsg" style="clear: both;position: absolute;"><div class="time">['+n+':'+m+']</div><div class="time" style="font-weight: bold;padding-right: 5px;color: #545454;width: auto;font-size: 14px;">→ '+nick+' </div><div class="nick" style="color:font-weight: bold;color: #545454;text-transform: lowercase;">has Devoiced Now</div><div class="time" style="font-weight: bold;color: #545454;font-size: 14px;width: auto;padding-left: 0px;">(-v)</div></div><br>');
+				$(channel+"MsgArea .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #545454;width: auto;font-size: 14px;">→ '+nick+' </div><div class="nick" style="font-weight: bold;color: #545454;text-transform: lowercase;">has Devoiced Now</div><div class="text" style="font-weight: bold;color: #545454;font-size: 14px;width: auto;padding-left: 0px;">(-v)</div></div>');
 				
 				$(channel+"MsgArea .messages")[0].scrollTop=$(channel+"MsgArea .messages")[0].scrollHeight;
 
 			}
 		});
 },
+
+irc.onKick= function(channel, nick) {console.log("onKick " + channel + " " + nick);
+			
+		var d = new Date();
+		var n = d.getHours();
+		var m = d.getMinutes();
+					
+		if(n<10){n="0"+n;};
+		if(m<10){m="0"+m;};
+		
+		
+		var maNick=$("#myNick").html();
+		
+		if(maNick==nick)
+		{
+			$(channel+"MsgArea .messages").append('<div class="msg privmsg"><div class="time">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #545454;width: auto;font-size: 14px;"> × You have been kicked from </div><div class="text" style="font-weight: bold;color: #545454;">'+channel+'</div></div>');
+			
+			$(channel+"Persons").css("pointer-events","none");
+			$(channel+"Persons").css("opacity","0.7");
+		}
+		
+		else
+		{
+			$(channel+"MsgArea .messages").append('<div class="msg privmsg"><div class="time">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #545454;width: auto;font-size: 14px;"> × '+nick+' has been kicked from </div><div class="text" style="font-weight: bold;color: #545454;">'+channel+'</div></div>');
+		}
+		
+		$(channel+"Persons ul li").map(function(i,d){
+
+		var str=$("a .nickName",this).html();
+		str=str.replace(" ","");
+
+		if(str==nick)
+		{
+			//decrease number of users after leaving user
+			if($(channel+"Persons .meta")[0])
+			{
+				var user=$(channel+"Persons .meta").html();
+				user=Number(user.replace("Users",""));
+				user--;
+
+				$(channel+"OnlineUsers").html(user);
+
+				$(channel+"Persons .meta").html(user);
+			}
+
+			$(this).remove();
+		}
+	});
+				
+		$(channel+"MsgArea .messages")[0].scrollTop=$(channel+"MsgArea .messages")[0].scrollHeight;
+},
+
+irc.onBan= function(channel, pattern) {console.log("onBan " + " " + channel + " " + pattern);
+	//alert(channel+"MsgArea .messages");
+		var d = new Date();
+		var n = d.getHours();
+		var m = d.getMinutes();
+					
+		if(n<10){n="0"+n;}
+		if(m<10){m="0"+m;}
+		
+		var pattern1=String(pattern);
+		nick=pattern1.substring(0,pattern1.indexOf("!"));
+		
+		console.log("Nick Ban: "+nick);
+		
+		var maNick=$("#myNick").html();
+		
+		if(maNick==nick)
+		{
+			$(channel+"MsgArea .messages").append('<div class="msg privmsg"><div class="time">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #545454;width: auto;font-size: 14px;"> × You have been banned from </div><div class="text" style="font-weight: bold;color: #545454;">'+channel+'</div></div>');
+			
+			//$(channel+"Persons").css("pointer-events","none");
+			//$(channel+"Persons").css("opacity","0.7");
+		}
+		
+		else
+		{
+			$(channel+"MsgArea .messages").append('<div class="msg privmsg"><div class="time">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #545454;width: auto;font-size: 14px;"> × '+nick+' has been banned from </div><div class="text" style="font-weight: bold;color: #545454;">'+channel+'</div></div>');
+		}
+},
+
+irc.onMessageDeliveryFailed= function(channel, error) {console.log("onMessageDeliveryFailed " + channel + " " + error);
+	//alert($(channel+"MsgArea .messages").length);
+	
+	var d = new Date();
+		var n = d.getHours();
+		var m = d.getMinutes();
+					
+		if(n<10){n="0"+n;}
+		if(m<10){m="0"+m;}
+		
+	if($(channel+"MsgArea .messages").length>0){
+		$(channel+"MsgArea .messages").append('<div class="msg privmsg"><div class="time">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #F00;width: auto;font-size: 14px;"> == '+error+' </div><div class="text" style="font-weight: bold;color: #F00;">['+channel+']</div></div>');
+	}
+},
+
+irc.onUnban= function(nick, channel, message) {console.log("onUnban " + nick + " " + channel + " " + message);},
 	
 irc.onSelfNick = function(new_nick) {console.log("onSelfNick " + new_nick);},
 irc.onSelfQuit = function() {console.log("onSelfQuit"); window.location=".";},
@@ -1324,7 +1529,7 @@ irc.onChannelList = function(channels) {console.log("onChannelList"); console.lo
 irc.onNames = function(channel, names) {//joinChannelsConfirmed
 
 	var rightBar1="",rightBar2="",rightBar3="";
-
+	
 	var channelName=channel.replace("#","");
 	channelName=channelName.replace("+","P");
 	channelName=channelName.replace(".","D");
@@ -1335,20 +1540,25 @@ irc.onNames = function(channel, names) {//joinChannelsConfirmed
 	channelName=channelName.replace("@","AD");
 		channelName=channelName.replace("`","CM");
 
-	names=names.sort();
-
 	names+='';
 	var names1 = names.split(',');
+	
+	names1=names1.sort(function (a, b) {
+    return a.toLowerCase().localeCompare(b.toLowerCase());
+	});
+	
+	console.log(names1);
 
 	if($("#"+channelName+"Tab").length==0)
 	{
-
+		
 		$("#loading-Bar").css("display","none");
 		$("#kiwi").css("display","inherit");
 
 		console.log("AkNames: "+ names);
 		$("#joinedChannels li").removeClass("active");
 		$(".panel").css("display","none");
+		$(".panel").removeClass("activeMsgWindow");
 		$(".part.fa.fa-nonexistant").css("display","none");
 		$(".memberlists div").removeClass("active");
 		$("#joinedChannels li").addClass("alert_activity")
@@ -1411,4 +1621,6 @@ irc.onNames = function(channel, names) {//joinChannelsConfirmed
 		$("#"+channelName+"Persons ul").prepend(rightBar1);
 		$("#"+channelName+"Persons ul").append(rightBar2);
 	}
+	
+	changeThisTheme();
 } // Called after joining a new channel

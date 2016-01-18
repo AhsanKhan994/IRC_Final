@@ -68,6 +68,7 @@ var IRC = (function() {
 		readLine: function (line) {
 			if (line == "")
 				return;
+			console.log("=> " + line);
 			var msg = new Message(line);
 			
 			if (msg.command[0] == "4") {
@@ -194,6 +195,7 @@ var IRC = (function() {
 		if (bang == -1) {
 			this.type = "server";
 			this.name = line;
+			this.nick = line;
 		} else {
 			this.type = "user";
 			this.nick = line.substring(0, bang);

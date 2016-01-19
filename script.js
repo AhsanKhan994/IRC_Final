@@ -55,22 +55,22 @@ var irc = {
 			"MODE": function(msg) {
 				switch(msg.args[0]) {
 					case "+o":
-						_this.onOp(msg.target, msg.args[1]);
+						_this.onOp(msg.source.nick, msg.target, msg.args[1]);
 						break;
 					case "-o":
-						_this.onDeop(msg.target, msg.args[1]);
+						_this.onDeop(msg.source.nick, msg.target, msg.args[1]);
 						break;
 					case "+v":
-						_this.onVoice(msg.target, msg.args[1]);
+						_this.onVoice(msg.source.nick, msg.target, msg.args[1]);
 						break;
 					case "-v":
-						_this.onDevoice(msg.target, msg.args[1]);
+						_this.onDevoice(msg.source.nick, msg.target, msg.args[1]);
 						break;
 					case "+b":
-						_this.onBan(msg.target, msg.args.slice(1));
+						_this.onBan(msg.source.nick, msg.target, msg.args.slice(1));
 						break;
 					case "-b":
-						_this.onUnban(msg.target, msg.args.slice(1));
+						_this.onUnban(msg.source.nick, msg.target, msg.args.slice(1));
 						break;
 					default:
 						_this.onMode(msg.source.nick, msg.target, msg.args.join(" "));
@@ -91,6 +91,11 @@ var irc = {
 					_this.onWhois(msg.args[0], msg.msg);
 				}
 			},
+			"310": function(msg) {
+				if (!_this.pendingban[msg.args[0]]) {
+					_this.onWhois(msg.args[0], msg.msg);
+				}
+			},
 			"311": function(msg) {
 				var nick = msg.args[0];
 				var ip = msg.args[2];
@@ -98,23 +103,23 @@ var irc = {
 				if (_this.pendingban[nick]) {
 					_this.banNickOnChannelByIP(nick, _this.pendingban[nick]);
 				} else {
-					var text = msg.args[0] + "is ( " + msg.args[1] + "@" + msg.args[2] + " )" + msg.args.slice(3).join(" ");
+					var text = "is ( " + msg.args[1] + "@" + msg.args[2] + " )" + msg.args.slice(3).join(" ");
 					_this.onWhois(msg.args[0], text);
 				}
 			},
 			"312": function(msg) {
 				if (!_this.pendingban[msg.args[0]]) {
-					_this.onWhois(msg.args[0], " Server: " + msg.msg);
+					_this.onWhois(msg.args[0], "Server: " + msg.msg);
 				}
 			},
 			"313": function(msg) {
 				if (!_this.pendingban[msg.args[0]]) {
-					_this.onWhois(msg.args[0], " " + msg.msg);
+					_this.onWhois(msg.args[0], msg.msg);
 				}
 			},
 			"317": function(msg) {
 				if (!_this.pendingban[msg.args[0]]) {
-					_this.onWhois(msg.args[0], " " + msg.msg);
+					_this.onWhois(msg.args[0], msg.msg);
 				}
 			},
 			"318": function(msg) { // WHOIS_END
@@ -122,7 +127,17 @@ var irc = {
 			},
 			"319": function(msg) {
 				if (!_this.pendingban[msg.args[0]]) {
-					_this.onWhois(msg.args[0], " Channels: " + msg.msg);
+					_this.onWhois(msg.args[0], "Channels: " + msg.msg);
+				}
+			},
+			"325": function(msg) {
+				if (!_this.pendingban[msg.args[0]]) {
+					_this.onWhois(msg.args[0], msg.msg);
+				}
+			},
+			"334": function(msg) {
+				if (!_this.pendingban[msg.args[0]]) {
+					_this.onWhois(msg.args[0], msg.args[1] + ": " + msg.msg);
 				}
 			},
 			// Channel list
@@ -188,7 +203,7 @@ var irc = {
 				if (tokens[1][0] == "#") {
 					var channel = tokens[1];
 				} else {
-					var chnnel = "#" + tokens[1];
+					var channel = "#" + tokens[1];
 				}
 				this.joinChannel(tokens[1]);
 				break;
@@ -270,7 +285,7 @@ var irc = {
 
 	unbanPatternOnChannel: function(nick, pattern) {
 		this.connection.mode(channel, "-b " + pattern);
-	}
+	},
 
 	whoisNick: function(nick) {
 		this.connection.whois(nick);
@@ -415,13 +430,13 @@ var irc = {
 	onStatus: function(message) {console.log("onStatus " + message);},
 	onChannelList: function(channels) {console.log("onChannelList"); console.log(channels);},
 	onBansList: function(channel, bans) {console.log("onBansList " + channel); console.log(bans);},
-	onOp: function(channel, nick) {console.log("onOp " + channel + " " + nick);},
-	onDeop: function(channel, nick) {console.log("onDeop " + channel + " " + nick);},
-	onVoice: function(channel, nick) {console.log("onVoice " + channel + " " + nick);},
-	onDevoice: function(channel, nick) {console.log("onDevoice " + channel + " " + nick);},
-	onKick: function(channel, nick) {console.log("onKick " + channel + " " + nick);},
-	onBan: function(channel, pattern) {console.log("onBan " + pattern + " " + channel);},
-	onUnban: function(channel, pattern) {console.log("onUnban " + pattern + " " + channel);},
+	onOp: function(source, channel, nick) {console.log("onOp " + channel + " " + nick);},
+	onDeop: function(source, channel, nick) {console.log("onDeop " + channel + " " + nick);},
+	onVoice: function(source, channel, nick) {console.log("onVoice " + channel + " " + nick);},
+	onDevoice: function(source, channel, nick) {console.log("onDevoice " + channel + " " + nick);},
+	onKick: function(source, channel, nick) {console.log("onKick " + channel + " " + nick);},
+	onBan: function(source, channel, pattern) {console.log("onBan " + pattern + " " + channel);},
+	onUnban: function(source, channel, pattern) {console.log("onUnban " + pattern + " " + channel);},
 	onMode: function(nick, channel, message) {console.log("onMode " + nick + " " + channel + " " + message);},
 	onMessageDeliveryFailed: function(channel, error) {console.log("onMessageDeliveryFailed " + channel + " " + error);},
 	onNickChangeRequest: function(msg) {

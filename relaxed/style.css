@@ -622,8 +622,9 @@ span.format_span {
 #kiwi .messages.active { }
 #kiwi .messages a { text-decoration:none; }
 
-#kiwi .messages .msg { /*border-bottom: 1px solid #DEDEDE;*/ padding: 1px; font-family:arial; font-size:0.9em; padding-bottom: 0px; line-height: 1em;}
-#kiwi .messages .msg .time { width:3.5em; float:left; color:#9E9E9E; padding:5px;padding-right: 0px;}
+#kiwi .messages .msg { /*border-bottom: 1px solid #DEDEDE;*/ padding: 1px; font-family:arial; font-size:0.9em; padding-bottom: 0px; line-height: 14px;padding-top: 0px;position: relative;
+    margin-top: -3px;}
+#kiwi .messages .msg .time { width:3.5em; float:left; color:#9E9E9E; padding:5px;padding-right: 0px; padding-bottom:0px;}
 
 #kiwi .messages .msg .nick
  {    
@@ -635,9 +636,11 @@ span.format_span {
     text-align: left;
     padding: 5px;
     padding-left: 0px;
+	padding-bottom:0px;
     overflow: hidden;
 	text-transform: capitalize;
 	border:none;
+    line-height: 17px;
 }
 
 span.inline-nick {
@@ -654,6 +657,7 @@ span.inline-nick {
     font-family: arial;
     padding: 5px;
 	font-size: 14px;
+	line-height:17px;
 }
 
 #kiwi .messages .msg.action .nick { }
@@ -672,7 +676,7 @@ span.inline-nick {
 /*#kiwi .messages .msg.motd .nick { display:none; }*/
 #kiwi .messages .msg.motd .text { color:#666; font-family:monospace; }
 #kiwi .messages .msg.whois .nick { font-weight:normal; }
-#kiwi .messages .msg.whois .text { margin-left:18em; padding-left:1em; border-left:1px dashed #999; }
+#kiwi .messages .msg.whois .text { /*margin-left:18em;*/ padding-left:1em; /*border-left:1px dashed #999;*/ }
 #kiwi .messages .msg.error .text {
     border:1px solid #A33F3F; background-color:#D28A8A;
     padding:0.5em; margin-top:1em; margin-bottom:1em; margin-right:2em;
@@ -880,12 +884,27 @@ li.mode {
 
 #kiwi .memberlists {}
 #kiwi .memberlists .meta {
-      border-bottom: 1px solid #E4F6FF;
+    border-bottom: 1px solid #E4F6FF; */
     font-size: 0.9em;
-    margin-top: -10px;
-    /* margin-bottom: 10px; */
-    padding-bottom: 1px;
+    /* background: #EFF7FB; */
+    background: rgb(86, 164, 238);
+    color: #FFFCFC;
+    border-bottom: 1px solid #2D88DE;
+    border-top: 1px solid #2D88DE;
+    margin-top: -15px;
+    position: relative;
+    /* top: -15px; */
+    padding-top: 1px;
+    padding-bottom: 0px;
     text-align: center;
+    height: 18px;
+    width: 50%;
+    float: right;
+}
+
+.memberlists div ul {
+    position: relative;
+    top: -15px;
 }
 
 .activeChannel {
@@ -894,8 +913,11 @@ li.mode {
     color: #3E3E3E;
     border-bottom: 1px solid #C4EBFF;
     border-top: 1px solid #C4EBFF;
+    padding-top: 3px;
     position: relative;
     top: -15px;
+    width: 50%;
+    display: inline-block;
 }
 
 #joinChan,#changeNick
@@ -1533,8 +1555,24 @@ box-shadow: 2px -2px 5px 0px rgba(189,189,189,1);*/
 	position: absolute;
     margin: 0 auto;
     z-index: 10000;
-    left: 50%;
-    top: 40%;
+	top: 25%;
+	left:0;
+	right:0;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+.LoveTheme
+{
+	background-image:-webkit-gradient(linear, 0% 0%, 0% 100%, from(rgb(251, 71, 77)), to(rgb(255, 155, 162)));
+	background-image:-moz-gradient(linear, 0% 0%, 0% 100%, from(rgb(251, 71, 77)), to(rgb(255, 155, 162)));
+	background-image:-ms-gradient(linear, 0% 0%, 0% 100%, from(rgb(251, 71, 77)), to(rgb(255, 155, 162)));
+	background-image:-o-gradient(linear, 0% 0%, 0% 100%, from(rgb(251, 71, 77)), to(rgb(255, 155, 162)));
+}
+
+#loading-Bar img
+{
+	height: 80px;
 }
 
 #kiwi .ui_menu {

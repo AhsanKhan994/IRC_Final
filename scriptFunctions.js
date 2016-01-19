@@ -719,30 +719,20 @@ irc.onMessage = function(who, where, text) {console.log("onMessage " + who + " "
 	
 	var colors=irc.messageColors(text);
 	text=irc.messageText(text);
-
-	text=text.replace(/:\)/g,'<i class="emoticon smile">:)</i>');
-	text=text.replace(/:3/g,'<i class="emoticon lion">:3</i>');
-	text=text.replace(/;3/g,'<i class="emoticon winky_lion">;3</i>');
-	text=text.replace(/;\)/g,'<i class="emoticon wink">;)</i>');
-	text=text.replace(/H:/g,'<i class="emoticon eyebrows">H:</i>');
-	text=text.replace(/:\(/g,'<i class="emoticon sad">:(</i>');
-	text=text.replace(/;_;/g,'<i class="emoticon cry">;_;</i>');
-	text=text.replace(/<3/g,'<i class="emoticon heart">&lt;3</i>');
-	text=text.replace(/;D/g,'<i class="emoticon wink_happy">;D</i>');
-	text=text.replace(/:P/g,'<i class="emoticon tongue">:P</i>');
-	text=text.replace(/:D/g,'<i class="emoticon happy">:D</i>');
-	text=text.replace(/:S/g,'<i class="emoticon confused">:S</i>');
-	text=text.replace(/xP/g,'<i class="emoticon cringe_tongue">xP</i>');
-	text=text.replace(/:O/g,'<i class="emoticon shocked">:O</i>');
-
-	text=text.replace(/>_</g,'<i class="emoticon doh">&gt;_&lt;</i>');
-	text=text.replace(/o.0/g,'<i class="emoticon wide_eye_right">o.0</i>');
-	text=text.replace(/0.o/g,'<i class="emoticon wide_eye_left">0.o</i>');
-	text=text.replace(/XD/g,'<i class="emoticon big_grin">XD</i>');
-	text=text.replace(/:F/g,'<i class="emoticon unsure">:\</i>');
+	
+	var str=text.toLowerCase();
 
 	var text2="";
 	var endPoint;
+	
+	try
+	{
+		if(colors[0]['start']!=0){
+			text2=text.substring(0, colors[0]['start']);
+		}
+	}
+	
+	catch(e){}
 	//alert(colors[0]['bg']);
 	
 	if(text!="" && where.match(/#/g))
@@ -803,9 +793,35 @@ irc.onMessage = function(who, where, text) {console.log("onMessage " + who + " "
 		var msgID=channelName+"MsgArea";
 		
 		if(colors.length<1){text2=text;};
+		
+		text2=text2.replace(/:\)/g,'<i class="emoticon smile">:)</i>');
+		text2=text2.replace(/:3/g,'<i class="emoticon lion">:3</i>');
+		text2=text2.replace(/;3/g,'<i class="emoticon winky_lion">;3</i>');
+		text2=text2.replace(/;\)/g,'<i class="emoticon wink">;)</i>');
+		text2=text2.replace(/H:/g,'<i class="emoticon eyebrows">H:</i>');
+		text2=text2.replace(/:\(/g,'<i class="emoticon sad">:(</i>');
+		text2=text2.replace(/;_;/g,'<i class="emoticon cry">;_;</i>');
+		text2=text2.replace(/<3/g,'<i class="emoticon heart">&lt;3</i>');
+		text2=text2.replace(/;D/g,'<i class="emoticon wink_happy">;D</i>');
+		text2=text2.replace(/:P/g,'<i class="emoticon tongue">:P</i>');
+		text2=text2.replace(/:D/g,'<i class="emoticon happy">:D</i>');
+		text2=text2.replace(/:S/g,'<i class="emoticon confused">:S</i>');
+		text2=text2.replace(/xP/g,'<i class="emoticon cringe_tongue">xP</i>');
+		text2=text2.replace(/:O/g,'<i class="emoticon shocked">:O</i>');
 
-		$("#"+msgID+" .messages").append('<div class="msg privmsg"><div class="time">['+n+':'+m+']</div><div class="nick" style="color:#20A0B5;">&lt;'+who+'&gt;</div><div class="text">'+text2+'</div></div>');
+		text2=text2.replace(/>_</g,'<i class="emoticon doh">&gt;_&lt;</i>');
+		text2=text2.replace(/o.0/g,'<i class="emoticon wide_eye_right">o.0</i>');
+		text2=text2.replace(/0.o/g,'<i class="emoticon wide_eye_left">0.o</i>');
+		text2=text2.replace(/XD/g,'<i class="emoticon big_grin">XD</i>');
+		text2=text2.replace(/:F/g,'<i class="emoticon unsure">:\</i>');
 
+		
+		if(str.indexOf("action")==0||str.indexOf("action")==1||text2.indexOf("ACTION")==0||text2.indexOf("ACTION")==1){
+			$("#"+msgID+" .messages").append('<div class="msg privmsg"><div class="time">['+n+':'+m+']</div><div class="nick" style="color:#B520B0;">*'+who+'*</div><div class="text" style="color:#B520B0;">'+text2.replace("ACTION","")+'</div></div>');
+		}
+		else{
+			$("#"+msgID+" .messages").append('<div class="msg privmsg"><div class="time">['+n+':'+m+']</div><div class="nick" style="color:#20A0B5;">&lt;'+who+'&gt;</div><div class="text">'+text2+'</div></div>');
+		}
 		//$("#"+msgID+ " .messages").animate({ scrollTop: $(this).scrollHeight }, "fast");
 
 		$("#"+msgID+ " .messages")[0].scrollTop=$("#"+msgID+ " .messages")[0].scrollHeight;
@@ -889,8 +905,39 @@ irc.onMessage = function(who, where, text) {console.log("onMessage " + who + " "
 
 		if(colors.length<1){text2=text;};
 		
-		$("#"+msgID+" .messages").append('<div class="msg privmsg"><div class="time">['+n+':'+m+']</div><div class="nick" style="color:#20A0B5;">&lt;'+who+'&gt;</div><div class="text" style="">'+text2+'</div></div>');
+		/*if(str.indexOf("action")==0){
+			$("#"+msgID+" .messages").append('<div class="msg privmsg"><div class="time">['+n+':'+m+']</div><div class="nick" style="color:#B520B0;">*'+who+'*</div><div class="text" style="color:#B520B0;">'+text2+'</div></div>');
+		}*/
+		
+		text2=text2.replace(/:\)/g,'<i class="emoticon smile">:)</i>');
+		text2=text2.replace(/:3/g,'<i class="emoticon lion">:3</i>');
+		text2=text2.replace(/;3/g,'<i class="emoticon winky_lion">;3</i>');
+		text2=text2.replace(/;\)/g,'<i class="emoticon wink">;)</i>');
+		text2=text2.replace(/H:/g,'<i class="emoticon eyebrows">H:</i>');
+		text2=text2.replace(/:\(/g,'<i class="emoticon sad">:(</i>');
+		text2=text2.replace(/;_;/g,'<i class="emoticon cry">;_;</i>');
+		text2=text2.replace(/<3/g,'<i class="emoticon heart">&lt;3</i>');
+		text2=text2.replace(/;D/g,'<i class="emoticon wink_happy">;D</i>');
+		text2=text2.replace(/:P/g,'<i class="emoticon tongue">:P</i>');
+		text2=text2.replace(/:D/g,'<i class="emoticon happy">:D</i>');
+		text2=text2.replace(/:S/g,'<i class="emoticon confused">:S</i>');
+		text2=text2.replace(/xP/g,'<i class="emoticon cringe_tongue">xP</i>');
+		text2=text2.replace(/:O/g,'<i class="emoticon shocked">:O</i>');
 
+		text2=text2.replace(/>_</g,'<i class="emoticon doh">&gt;_&lt;</i>');
+		text2=text2.replace(/o.0/g,'<i class="emoticon wide_eye_right">o.0</i>');
+		text2=text2.replace(/0.o/g,'<i class="emoticon wide_eye_left">0.o</i>');
+		text2=text2.replace(/XD/g,'<i class="emoticon big_grin">XD</i>');
+		text2=text2.replace(/:F/g,'<i class="emoticon unsure">:\</i>');
+
+		
+		if(str.indexOf("action")==0||str.indexOf("action")==1||text2.indexOf("ACTION")==0||text2.indexOf("ACTION")==1){
+			$("#"+msgID+" .messages").append('<div class="msg privmsg"><div class="time">['+n+':'+m+']</div><div class="nick" style="color:#B520B0;">*'+who+'*</div><div class="text" style="color:#B520B0;">'+text2.replace("ACTION","")+'</div></div>');
+		}
+		else{
+			$("#"+msgID+" .messages").append('<div class="msg privmsg"><div class="time">['+n+':'+m+']</div><div class="nick" style="color:#20A0B5;">&lt;'+who+'&gt;</div><div class="text" style="">'+text2+'</div></div>');
+		}
+		
 		//$("#"+msgID+ " .messages").animate({ scrollTop: $(this).scrollHeight }, "fast");
 
 		$("#"+msgID+ " .messages")[0].scrollTop=$("#"+msgID+ " .messages")[0].scrollHeight;
@@ -910,6 +957,80 @@ irc.onWhois = function(who, data) {console.log("onWhois " + who + " " + data);
 		$(".activeMsgWindow .messages").append('<div class="msg privmsg"><div class="time" style="color:#DB8030;width: auto;">-@-</div><div class="nick" style="color:#DB8030;padding-right: 0px;">&nbsp;WHOIS&nbsp;</div><div class="text" style="color:#DB8030;">-@-</div></div>');
 	}
 	
+	
+	//Putting color----------------
+	var colors=irc.messageColors(data);
+		text=irc.messageText(data);
+		
+		console.log(colors);
+
+		text=text.replace(/:\)/g,'<i class="emoticon smile">:)</i>');
+		text=text.replace(/:3/g,'<i class="emoticon lion">:3</i>');
+		text=text.replace(/;3/g,'<i class="emoticon winky_lion">;3</i>');
+		text=text.replace(/;\)/g,'<i class="emoticon wink">;)</i>');
+		text=text.replace(/H:/g,'<i class="emoticon eyebrows">H:</i>');
+		text=text.replace(/:\(/g,'<i class="emoticon sad">:(</i>');
+		text=text.replace(/;_;/g,'<i class="emoticon cry">;_;</i>');
+		text=text.replace(/<3/g,'<i class="emoticon heart">&lt;3</i>');
+		text=text.replace(/;D/g,'<i class="emoticon wink_happy">;D</i>');
+		text=text.replace(/:P/g,'<i class="emoticon tongue">:P</i>');
+		text=text.replace(/:D/g,'<i class="emoticon happy">:D</i>');
+		text=text.replace(/:S/g,'<i class="emoticon confused">:S</i>');
+		text=text.replace(/xP/g,'<i class="emoticon cringe_tongue">xP</i>');
+		text=text.replace(/:O/g,'<i class="emoticon shocked">:O</i>');
+
+		text=text.replace(/>_</g,'<i class="emoticon doh">&gt;_&lt;</i>');
+		text=text.replace(/o.0/g,'<i class="emoticon wide_eye_right">o.0</i>');
+		text=text.replace(/0.o/g,'<i class="emoticon wide_eye_left">0.o</i>');
+		text=text.replace(/XD/g,'<i class="emoticon big_grin">XD</i>');
+		text=text.replace(/:F/g,'<i class="emoticon unsure">:\</i>');
+		
+		var text2="";
+		var endPoint;
+		
+	try
+	{
+		if(colors[0]['start']!=0){
+			text2=text.substring(0, colors[0]['start']);
+		}
+	}
+	
+	catch(e){}
+	
+	try
+	{
+			for(var i=0;i<colors.length&&colors[i]['start']<(text.length-1);i++){
+				
+				if(colors.length==i+1)
+				{
+					endPoint=text.length-1;
+				}
+				else
+				{
+					endPoint=colors[i+1]['start'];
+				}
+				
+				
+					//if(typeof colors[i]['bg']!==undefined && typeof colors[i]['fg']!==undefined){
+						text2+="<span style='display:inline;background:"+colors[i]['bg']+";color:"+colors[i]['fg']+";'>"+text.substring(colors[i]['start'], endPoint)+"</span>";
+					//}
+					//else if(typeof colors[i]['bg']!==undefined){
+						//text="<span style='background:"+colors[0]['bg']+";'>"+text.substring(colors[i]['start'], 5)+"</span>";
+					//}
+					//else if(typeof colors[i]['fg']!==undefined){
+						//text="<span style='color:"+colors[0]['fg']+";'>"+text.substring(colors[i]['start'], 5)+"</span>";
+					//}
+				
+			}
+	}
+
+	catch(e){
+			 console.log("Color Err: ",e);
+	}
+		
+	if(colors.length<1){text2=text;};
+	//---------------------------End Putting color----------------
+	
 	prev_name=who;
 	
 	var d = new Date();
@@ -921,7 +1042,7 @@ irc.onWhois = function(who, data) {console.log("onWhois " + who + " " + data);
 	
 	var nickName=$("li.nickSelected .nick .nickName").text();
 
-	$(".activeMsgWindow .messages").append('<div class="msg whois  nick_416873616e"><div class="time" style="line-height: 1.4;">['+n+':'+m+']</div><div class="nick" style="color:#1a2597;font-weight:bold;">['+nickName+']</div><div class="text" style=""><span class="inline-nick" style=";cursor:pointer;">'+data+'</span></div></div>');
+	$(".activeMsgWindow .messages").append('<div class="msg whois  nick_416873616e"><div class="time" style="line-height: 1.4;">['+n+':'+m+']</div><div class="nick" style="color:#1a2597;font-weight:bold;">['+nickName+']</div><div class="text" style="background: #F1F1F1;"><span class="inline-nick" style=";cursor:pointer;">'+text2+'</span></div></div>');
 	$(".activeMsgWindow .messages")[0].scrollTop=$(".activeMsgWindow .messages")[0].scrollHeight;
 	
 	$(".activeMsgWindow .messages")[0].scrollTop=$(".activeMsgWindow .messages")[0].scrollHeight;
@@ -930,7 +1051,9 @@ irc.onWhois = function(who, data) {console.log("onWhois " + who + " " + data);
 	
 irc.onJoin = function(who, where) {console.log("onJoin " + who + " " + where);//AhsanKhan1
 
+	var IAm=who;
 	who = who.nick;
+	
 
 	var channelName=where.replace("#","");
 	channelName=channelName.replace("+","P");
@@ -969,7 +1092,12 @@ irc.onJoin = function(who, where) {console.log("onJoin " + who + " " + where);//
 	{
 		rightBar='<li class="mode"><a class="nick"><span class="prefix">@</span><span class="nickName">'+who+'</span></a></li>';
 		$("#"+channelName+"Persons ul").append(rightBar);
+		
+		var shiftIt=$("#"+channelName+"Persons ul li:last");
+		
+		sortOnlineUsers(channelName,shiftIt,who);
 	}
+	
 
 	//increase number of users after joining 1 user
 
@@ -986,11 +1114,13 @@ irc.onJoin = function(who, where) {console.log("onJoin " + who + " " + where);//
 
 
 	//console.log("#"+channelName+"MsgArea .messages");
-	$("#"+channelName+"MsgArea .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #FD723B;width: auto;font-size: 14px;">→ '+who+' </div><div class="nick" style="font-weight: bold;color: #FD723B;text-transform: lowercase;">has joined</div><div class="text" style="font-weight: bold;color: #FD723B;font-size: 14px;width: auto;padding-left: 0px;">'+where+'</div></div>');
+	$("#"+channelName+"MsgArea .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #FD723B;width: auto;font-size: 14px;">→ '+who+' ('+IAm.name+'@' +IAm.host+')'+' </div><div class="nick" style="font-weight: bold;color: #FD723B;text-transform: lowercase;">has joined</div><div class="text" style="font-weight: bold;color: #FD723B;font-size: 14px;width: auto;padding-left: 0px;">'+where+'</div></div>');
 	
 	if($("#"+channelName+"MsgArea .messages").length!=0){
 		$("#"+channelName+"MsgArea .messages")[0].scrollTop=$("#"+channelName+"MsgArea .messages")[0].scrollHeight;
 	}
+	
+
 };
 	
 irc.onPart = function(who, where, message) {console.log("onPart " + who + " " + where + " " + message);
@@ -1093,16 +1223,33 @@ irc.onQuit = function(who, message) {console.log("onQuit " + who + " " + message
 
 
 			$(this).remove();
-
-			$("#"+id).append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #B30000;width: auto;font-size: 14px;">← '+who+' </div><div class="text" style="font-weight: bold;color: #B30000;text-transform: lowercase;">has quit (Connection Closed)  </div></div>');
+			
+			if(!message.match(/You are banned from this network/g)){
+				
+				$("#"+id).append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #B30000;width: auto;font-size: 14px;">← '+who+' </div><div class="text" style="font-weight: bold;color: #B30000;text-transform: lowercase;">has quit (Connection Closed)  </div></div>');
+			}
+			
+			else{
+				
+				$("#"+id).append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #B30000;width: auto;font-size: 14px;">← ['+who+'] </div><div class="text" style="font-weight: bold;color: #B30000;text-transform: lowercase;">'+message+'</div></div>');
+			}
 			
 			$("#"+id)[0].scrollTop=$("#"+id)[0].scrollHeight;
 
 			if($("#"+who+"MsgArea").length!=0 && chckI==0)
 			{
 				chckI++;
+				
+				if(!message.match(/You are banned from this network/g)){
 
-				$("#"+who+"MsgArea .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #B30000;width: auto;font-size: 14px;">← '+who+' </div><div class="text" style="font-weight: bold;color: #B30000;text-transform: lowercase;">has quit (Connection Closed)  </div></div>');
+					$("#"+who+"MsgArea .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #B30000;width: auto;font-size: 14px;">← '+who+' </div><div class="text" style="font-weight: bold;color: #B30000;text-transform: lowercase;">has quit (Connection Closed)  </div></div>');
+				}
+				
+				else{
+				
+					$("#"+who+"MsgArea .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #B30000;width: auto;font-size: 14px;">← ['+who+'] </div><div class="text" style="font-weight: bold;color: #B30000;text-transform: lowercase;">'+message+'</div></div>');
+				}
+				
 				$("#"+who+"MsgArea .messages")[0].scrollTop=$("#"+who+"MsgArea .messages")[0].scrollHeight;
 			}
 		}
@@ -1130,30 +1277,18 @@ irc.onTopic = function(channel, topic) {console.log("onTopic " + channel + " " +
 		
 		var colors=irc.messageColors(topic);
 		text=irc.messageText(topic);
-
-		text=text.replace(/:\)/g,'<i class="emoticon smile">:)</i>');
-		text=text.replace(/:3/g,'<i class="emoticon lion">:3</i>');
-		text=text.replace(/;3/g,'<i class="emoticon winky_lion">;3</i>');
-		text=text.replace(/;\)/g,'<i class="emoticon wink">;)</i>');
-		text=text.replace(/H:/g,'<i class="emoticon eyebrows">H:</i>');
-		text=text.replace(/:\(/g,'<i class="emoticon sad">:(</i>');
-		text=text.replace(/;_;/g,'<i class="emoticon cry">;_;</i>');
-		text=text.replace(/<3/g,'<i class="emoticon heart">&lt;3</i>');
-		text=text.replace(/;D/g,'<i class="emoticon wink_happy">;D</i>');
-		text=text.replace(/:P/g,'<i class="emoticon tongue">:P</i>');
-		text=text.replace(/:D/g,'<i class="emoticon happy">:D</i>');
-		text=text.replace(/:S/g,'<i class="emoticon confused">:S</i>');
-		text=text.replace(/xP/g,'<i class="emoticon cringe_tongue">xP</i>');
-		text=text.replace(/:O/g,'<i class="emoticon shocked">:O</i>');
-
-		text=text.replace(/>_</g,'<i class="emoticon doh">&gt;_&lt;</i>');
-		text=text.replace(/o.0/g,'<i class="emoticon wide_eye_right">o.0</i>');
-		text=text.replace(/0.o/g,'<i class="emoticon wide_eye_left">0.o</i>');
-		text=text.replace(/XD/g,'<i class="emoticon big_grin">XD</i>');
-		text=text.replace(/:F/g,'<i class="emoticon unsure">:\</i>');
 		
 		var text2="";
 		var endPoint;
+		
+		try
+		{
+			if(colors[0]['start']!=0){
+				text2=text.substring(0, colors[0]['start']);
+			}
+		}
+	
+		catch(e){}
 	
 		try
 		{
@@ -1187,6 +1322,27 @@ irc.onTopic = function(channel, topic) {console.log("onTopic " + channel + " " +
 		}
 		
 		if(colors.length<1){text2=text;};
+		
+		text2=text2.replace(/:\)/g,'<i class="emoticon smile">:)</i>');
+		text2=text2.replace(/:3/g,'<i class="emoticon lion">:3</i>');
+		text2=text2.replace(/;3/g,'<i class="emoticon winky_lion">;3</i>');
+		text2=text2.replace(/;\)/g,'<i class="emoticon wink">;)</i>');
+		text2=text2.replace(/H:/g,'<i class="emoticon eyebrows">H:</i>');
+		text2=text2.replace(/:\(/g,'<i class="emoticon sad">:(</i>');
+		text2=text2.replace(/;_;/g,'<i class="emoticon cry">;_;</i>');
+		text2=text2.replace(/<3/g,'<i class="emoticon heart">&lt;3</i>');
+		text2=text2.replace(/;D/g,'<i class="emoticon wink_happy">;D</i>');
+		text2=text2.replace(/:P/g,'<i class="emoticon tongue">:P</i>');
+		text2=text2.replace(/:D/g,'<i class="emoticon happy">:D</i>');
+		text2=text2.replace(/:S/g,'<i class="emoticon confused">:S</i>');
+		text2=text2.replace(/xP/g,'<i class="emoticon cringe_tongue">xP</i>');
+		text2=text2.replace(/:O/g,'<i class="emoticon shocked">:O</i>');
+
+		text2=text2.replace(/>_</g,'<i class="emoticon doh">&gt;_&lt;</i>');
+		text2=text2.replace(/o.0/g,'<i class="emoticon wide_eye_right">o.0</i>');
+		text2=text2.replace(/0.o/g,'<i class="emoticon wide_eye_left">0.o</i>');
+		text2=text2.replace(/XD/g,'<i class="emoticon big_grin">XD</i>');
+		text2=text2.replace(/:F/g,'<i class="emoticon unsure">:\</i>');
 
 		$("#"+msgID+" .messages").append('<div class="msg privmsg TopicName" style="margin-top: 0px;position: relative;border:2px dotted #D4A516;"><div class="time" style="color: #FFED00;font-weight: bold;font-size: 16px;line-height: 1.3;">Topic</div><div class="nick" style="color:#FFFFFF;line-height: 1.3;">&lt;'+channel+'&gt;</div><div class="text" style="background: #3087EC;color:#fff;line-height: 1.3;">'+text2+'</div></div>');
 		changeThisTheme();
@@ -1228,6 +1384,22 @@ irc.onNick = function(old_nick, new_nick) {console.log("onNick " + old_nick + " 
 
 			var id=$(this).closest(".PersonsArea").attr("id");
 			id=id.replace("Persons","");
+			
+			//------------------for sorting
+			shiftIt=$(this).closest(".mode");
+			
+			if($(this).closest(".mode").hasClass("o")){	
+				sortOnline_Special_Users(id,shiftIt,new_nick,"o");
+			}
+			
+			else if($(this).closest(".mode").hasClass("v")){	
+				sortOnline_Special_Users(id,shiftIt,new_nick,"v");
+			}
+			
+			else{	
+				sortOnlineUsers(id,shiftIt,new_nick);
+			}
+			//-----End sorting------	
 
 			var d = new Date();
 			var n = d.getHours();
@@ -1278,9 +1450,16 @@ irc.onOp= function(channel, nick) {console.log("onOp " + channel + " " + nick);
 					$(channel+"MsgArea").addClass("isOperator");
 				}
 				
-				$(this).closest(".mode").addClass("o").prependTo(channel+"Persons ul");
+				if($(channel+"Persons ul .mode").hasClass("o")){
+					$($(this).closest(".mode")).addClass("o").insertAfter(channel+"Persons .o:last");
+				}
+				else{
+					$(this).closest(".mode").addClass("o").prependTo(channel+"Persons ul");
+				}
 				
+				shiftIt=$(this).closest(".mode");
 				
+				sortOnline_Special_Users(channel.replace("#",""),shiftIt,nick,"o");
 				
 				var d = new Date();
 				var n = d.getHours();
@@ -1335,6 +1514,10 @@ irc.onDeop= function(channel, nick) {console.log("onDeop " + channel + " " + nic
 					$(channel+"MsgArea").removeClass("isOperator");
 				}
 				
+				shiftIt=$(this).closest(".mode");
+				
+				sortOnlineUsers(channel.replace("#",""),shiftIt,nick);
+				
 				var d = new Date();
 				var n = d.getHours();
 				var m = d.getMinutes();
@@ -1367,7 +1550,12 @@ irc.onVoice= function(channel, nick) {console.log("onVoice " + channel + " " + n
 				$(this).before('<span class="prefix">+</span>');
 				//alert('voice');
 				
-				$($(this).closest(".mode")).insertAfter(channel+"Persons .o:last");
+				if($(channel+"Persons ul .mode").hasClass("v")){
+					$($(this).closest(".mode")).addClass("v").insertAfter(channel+"Persons .v:last");
+				}
+				else{
+					$($(this).closest(".mode")).addClass("v").insertAfter(channel+"Persons .o:last");
+				}
 				
 				$(this).html(nick);
 
@@ -1377,9 +1565,10 @@ irc.onVoice= function(channel, nick) {console.log("onVoice " + channel + " " + n
 					
 				if(n<10){n="0"+n;};
 				if(m<10){m="0"+m;};
-		
-			
-				$(this).closest(".mode").addClass("v");
+						
+				shiftIt=$(this).closest(".mode");
+				
+				sortOnline_Special_Users(channel.replace("#",""),shiftIt,nick,"v");
 
 				$(channel+"MsgArea .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #9C2C00;width: auto;font-size: 14px;">→ '+nick+' </div><div class="nick" style="font-weight: bold;color: #9C2C00;text-transform: lowercase;">has Voiced Now</div><div class="text" style="font-weight: bold;color: #9C2C00;font-size: 14px;width: auto;padding-left: 0px;">(+v)</div></div>');
 				
@@ -1406,6 +1595,11 @@ irc.onDevoice= function(channel, nick) {console.log("onDevoice " + channel + " "
 				
 				$(this).closest(".mode").removeClass("v");
 	//alert('devoice');
+	
+				shiftIt=$(this).closest(".mode");
+				
+				sortOnlineUsers(channel.replace("#",""),shiftIt,nick);
+				
 				var d = new Date();
 				var n = d.getHours();
 				var m = d.getMinutes();
@@ -1521,7 +1715,7 @@ irc.onMessageDeliveryFailed= function(channel, error) {console.log("onMessageDel
 irc.onUnban= function(nick, channel, message) {console.log("onUnban " + nick + " " + channel + " " + message);},
 	
 irc.onSelfNick = function(new_nick) {console.log("onSelfNick " + new_nick);},
-irc.onSelfQuit = function() {console.log("onSelfQuit"); window.location=".";},
+irc.onSelfQuit = function() {console.log("onSelfQuit"); },
 irc.onError = function(message) {console.log("onError " + message);},
 irc.onStatus = function(message) {console.log("onStatus " + message);},
 irc.onChannelList = function(channels) {console.log("onChannelList"); console.log(channels);},
@@ -1624,3 +1818,40 @@ irc.onNames = function(channel, names) {//joinChannelsConfirmed
 	
 	changeThisTheme();
 } // Called after joining a new channel
+
+function sortOnlineUsers(channelName,shiftIt,who){
+		
+		var Stop=0;
+		$("#"+channelName+"Persons ul li").map(function(index,element){
+			
+			if(!$(this).hasClass("o")&&!$(this).hasClass("v")){
+				thisNick=$(".nickName",this).text();
+				
+				if(thisNick.toLowerCase()>who.toLowerCase()&&Stop==0){
+					Stop=1;	
+					shiftIt.insertAfter($(this).prev("li"));		
+				}
+			}
+		});
+}
+
+
+function sortOnline_Special_Users(channelName,shiftIt,who,thisClass){
+		
+		var Stop=0;
+		$("#"+channelName+"Persons ul li").map(function(index,element){
+			
+			if($(this).hasClass(thisClass)){
+				thisNick=$(".nickName",this).text();
+				
+				if(thisNick.toLowerCase()>who.toLowerCase()&&Stop==0){
+					Stop=1;
+					shiftIt.insertAfter($(this).prev("li"));		
+				}
+			}
+		});
+		
+		//if(Stop==0){
+			//shiftIt.insertAfter($("#"+channelName+"Persons ul li."+thisClass+":last"));
+		//}
+}

@@ -213,6 +213,7 @@ html, body { height:100%; }
 #kiwi .userbox a i { width:1em; text-align:center; }
 
 
+
 /* Emoticons */
 #kiwi .emoticon {
     display: inline-block;
@@ -225,7 +226,7 @@ html, body { height:100%; }
     font-size: 0;
     background: url(../img/emoticons.png) no-repeat;
 }
-#kiwi .emoticon.smile { background-position:1px 1px; }
+#kiwi .emoticon.smile { background-position:0px 0px; }
 #kiwi .emoticon.sad { background-position:-25px 0; }
 #kiwi .emoticon.lion { background-position:-50px 0; }
 #kiwi .emoticon.winky_lion { background-position:-75px 0; }

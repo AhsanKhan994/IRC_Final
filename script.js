@@ -9,6 +9,7 @@ var irc = {
 	ignoredStatuses: ["818", "819", // CR proprietary stuff
 					  "366",        // End of names
 					  "330",        // Whowas time
+					  "322", "323", // Channel list
 					  "333"],       // Channel creation time
 
 	// API

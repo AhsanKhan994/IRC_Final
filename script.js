@@ -266,6 +266,11 @@ var irc = {
 	changeNick: function(newNick) {
 		this.connection.nick(newNick);
 	},
+
+	registerNick: function(password, email) {
+		this.connection.sendIrc("ATTACH " + password + " " + email);
+	},
+
 	login: function(nick, password) {
 		this.connection.nick(nick + " " + password);
 	},
@@ -431,13 +436,13 @@ var irc = {
 	onStatus: function(message) {console.log("onStatus " + message);},
 	onChannelList: function(channels) {console.log("onChannelList"); console.log(channels);},
 	onBansList: function(channel, bans) {console.log("onBansList " + channel); console.log(bans);},
-	onOp: function(source, channel, nick) {console.log("onOp " + channel + " " + nick);},
-	onDeop: function(source, channel, nick) {console.log("onDeop " + channel + " " + nick);},
-	onVoice: function(source, channel, nick) {console.log("onVoice " + channel + " " + nick);},
-	onDevoice: function(source, channel, nick) {console.log("onDevoice " + channel + " " + nick);},
-	onKick: function(source, channel, nick) {console.log("onKick " + channel + " " + nick);},
-	onBan: function(source, channel, pattern) {console.log("onBan " + pattern + " " + channel);},
-	onUnban: function(source, channel, pattern) {console.log("onUnban " + pattern + " " + channel);},
+	onOp: function(source, channel, nick) {console.log("onOp " + source + " " + channel + " " + nick);},
+	onDeop: function(source, channel, nick) {console.log("onDeop " + source + " " + channel + " " + nick);},
+	onVoice: function(source, channel, nick) {console.log("onVoice " + source + " " + channel + " " + nick);},
+	onDevoice: function(source, channel, nick) {console.log("onDevoice " + source + " " + channel + " " + nick);},
+	onKick: function(source, channel, nick) {console.log("onKick " + source + " " + channel + " " + nick);},
+	onBan: function(source, channel, pattern) {console.log("onBan " + source + " " + pattern + " " + channel);},
+	onUnban: function(source, channel, pattern) {console.log("onUnban " + source + " " + pattern + " " + channel);},
 	onMode: function(nick, channel, message) {console.log("onMode " + nick + " " + channel + " " + message);},
 	onMessageDeliveryFailed: function(channel, error) {console.log("onMessageDeliveryFailed " + channel + " " + error);},
 	onNickChangeRequest: function(msg) {

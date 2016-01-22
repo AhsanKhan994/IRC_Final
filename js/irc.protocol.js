@@ -77,20 +77,20 @@ var IRC = (function() {
  			this.handle(msg.command, msg);
 		},
  
-			handle: function(key, msg) {
- 			var handler = this.handlers[key];
- 
+		handle: function(key, msg) {
+			var handler = this.handlers[key];
+
 			if (handler != undefined) {
-				
+
 				if (msg != undefined) {
- 					handler(msg);
- 				} else {
- 					handler();
- 				}
-				};
- 			if (msg.command.match(/[0-9]{3}/)) {
- 				this.handlers["status"](msg);
- 			};
+					handler(msg);
+				} else {
+					handler();
+				}
+			};
+			if (msg && msg.command.match(/[0-9]{3}/)) {
+				this.handlers["status"](msg);
+			};
 		},
 		
 		onClose: function() {

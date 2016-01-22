@@ -206,7 +206,7 @@ var irc = {
 				} else {
 					var channel = "#" + tokens[1];
 				}
-				this.joinChannel(tokens[1]);
+				this.joinChannel(channel);
 				break;
 			case "MSG":
 				this.message(tokens[1], tokens.slice(2).join(" "));

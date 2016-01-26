@@ -31,6 +31,9 @@ var irc = {
 					console.log("Muted message from " + msg.source.nick);
 				}
 			},
+			"NOTICE": function(msg) {
+				_this.onNotice(msg.source.nick, msg.target, msg.msg);
+			},
 			"JOIN": function(msg) {
 				_this.onJoin(msg.source, msg.msg);
 			},
@@ -234,6 +237,18 @@ var irc = {
 			case "MODE":
 				this.connection.mode(target, tokens.slice(1).join(" "));
 				break;
+			case "NS":
+				_this.message("NickServ", tokens.slice(1).join(" "));
+				break;
+			case "CS":
+				_this.message("ChanServ", tokens.slice(1).join(" "));
+				break;
+			case "MS":
+				_this.message("MemoServ", tokens.slice(1).join(" "));
+				break;
+			case "OS":
+				_this.message("OperServ", tokens.slice(1).join(" "));
+				break;
 		}
 	},
 
@@ -423,6 +438,7 @@ var irc = {
 
 	onConnected: function(success) {console.log("onConnected " + success);},
 	onMessage: function(who, where, text) {console.log("onMessage " + who + " " + where + " " + text);},
+	onNotice: function(who, where, text) {console.log("onNotice " + who + " " + where + " " + text);},
 	onWhois: function(who, data) {console.log("onWhois " + who + " " + data);},
 	onJoin: function(who, where) {console.log("onJoin " + who + " " + where);},
 	onPart: function(who, where, message) {console.log("onPart " + who + " " + where + " " + message);},

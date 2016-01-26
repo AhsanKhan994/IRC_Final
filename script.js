@@ -178,7 +178,7 @@ var irc = {
 			},
 			"status": function(msg) {
 				if (_this.ignoredStatuses.indexOf(msg.command) == -1) {
-					_this.onStatus(msg.toString());
+					_this.onStatus(msg.msg);
 				};
 			},
 			"close": _this.onSelfQuit
@@ -305,19 +305,19 @@ var irc = {
 		this.connection.quit();
 	},
 
-	opNickOnChannel(nick, channel) {
+	opNickOnChannel: function (nick, channel) {
 		this.connection.mode(channel, "+o "+nick);
 	},
 
-	deopNickOnChannel(nick, channel) {
+	deopNickOnChannel: function (nick, channel) {
 		this.connection.mode(channel, "-o "+nick);
 	},
 
-	voiceNickOnChannel(nick, channel) {
+	voiceNickOnChannel: function (nick, channel) {
 		this.connection.mode(channel, "+v "+nick);
 	},
 
-	devoiceNickOnChannel(nick, channel) {
+	devoiceNickOnChannel: function (nick, channel) {
 		this.connection.mode(channel, "-v "+nick);
 	},
 

@@ -32,7 +32,7 @@
  * @param {function} onClose Remote host disconnects the connection
  */
 function jSocket() {
-  this.id = "jSocket_"+ (++jSocket.last_id);
+  this.id = "jSocket_1";
   jSocket.sockets[this.id] = this;
 
   // Connection state

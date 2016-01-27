@@ -237,6 +237,9 @@ var irc = {
 			case "MODE":
 				this.connection.mode(target, tokens.slice(1).join(" "));
 				break;
+			case "UMODE":
+				this.connection.mode(_this.currentNick, tokens.slice(1).join(" "));
+				break;
 			case "NS":
 				_this.message("NickServ", tokens.slice(1).join(" "));
 				break;

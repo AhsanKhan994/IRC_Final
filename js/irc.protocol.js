@@ -98,6 +98,7 @@ var IRC = (function() {
   		},
 
 		sendIrc: function (line) {
+			line = line.replace(String.fromCharCode(13), "");
 			console.log("-> "+line);
 			this.mySocket.write(line);
 		},
@@ -144,7 +145,8 @@ var IRC = (function() {
  		},
 
 		mode: function(target, line) {
-			this.sendIrc("MODE " + target + " :" + line);
+			var command = "MODE " + target + " :" + line;
+			this.sendIrc(command);
 		},
 
 		invite: function(client, channel) {

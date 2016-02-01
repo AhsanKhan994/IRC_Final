@@ -82,6 +82,7 @@ var irc = {
 			},
 			"001": function(msg) {
 				_this.onConnected(true);
+				_this.onStatus("Last updated 20160202");
 			},
 			"002": function(msg) {
 				console.log(channels);

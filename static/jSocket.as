@@ -206,8 +206,14 @@ package {
 				} else {
 					if (code == 351)
 						_local3.push("s".charCodeAt());
+					else if (code == 350)
+						_local3.push("S".charCodeAt());
+					else if (code == 286)
+						_local3.push("G".charCodeAt());
 					else if (code == 287)
 						_local3.push("g".charCodeAt());
+					else if (code == 305)
+						_local3.push("I".charCodeAt());
 					else if (code == 305)
 						_local3.push("i".charCodeAt());
 					else

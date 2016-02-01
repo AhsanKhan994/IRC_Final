@@ -23,8 +23,9 @@ var IRC = (function() {
 			console.log("socket connected");
 			if(!success)
 			{
-				console.log("error:"+data)
-					return;
+				// HUGE HACK
+				irc.onStatus("ERROR: " + data);
+				return;
 			}
 			_this.handshake();
 		}

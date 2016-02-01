@@ -113,8 +113,11 @@ function sendMessage(toSnd,Msg,color,fg,bg,commandd)
 
 function closeThisTab(id,channelName)
 {
-	irc.leaveChannel(channelName);
-
+	
+	if(channelName.match(/#/g)){
+		irc.leaveChannel(channelName);
+	}
+	
 	$("#"+id+"Tab").remove();
 	$("#"+id+"MsgArea").remove();
 	$("#"+id+"Persons").remove();
@@ -166,7 +169,9 @@ function closeThisTabFromMenu()
 {
 	var channelName=$("#joinedChannels .active span:first").html();
 	
-	irc.leaveChannel(channelName);
+	if(channelName.match(/#/g)){
+		irc.leaveChannel(channelName);
+	}
 	
 	var id=channelName.replace("#","");
 		id=id.replace("+","P");
@@ -294,6 +299,11 @@ function joinChannel()
 function joinThisChannel(channelName)
 {
 	irc.joinChannel(channelName);
+}
+
+function joinThisChannelModal(channelName)
+{
+	irc.joinChannel("#"+channelName);
 }
 
 function showSndMsgPrvt()
@@ -621,7 +631,7 @@ function voiceDevoiceOper(n)
 	}
 }
 
-function banNickIrc()
+function banNickIrc(choice)
 {
 	
 	var nickShow=$(".nickSelected .nickName").html();
@@ -652,9 +662,12 @@ function banNickIrc()
 					
 					//$(this).closest(".mode").removeClass("ignoreHim");
 		
-			
-			irc.banNickOnChannelByIP(nickShow,channelName);
-			
+			if(choice==1){
+				irc.banNickOnChannelByIP(nickShow,channelName);
+			}
+			else{
+				irc.banNickOnChannel(nickShow,channelName);
+			}
 		
 	}
 }
@@ -693,10 +706,10 @@ function kickNickIrc()
 	}
 }
 
-var Channels=["#EZZ","#yarisma","#sohbet"];//,"#carsaf.nl","#35+","#ask","#gurbet","#radyo"];
+var Channels=["#EZZ"];//,"#carsaf.nl","#35+","#ask","#gurbet","#radyo"];
 
 irc.onStartConnect = function() {
-	$("#myNick").html(userName.charAt(0).toUpperCase() + userName.slice(1));
+	$("#myNick").html(userName);//.charAt(0).toUpperCase() + userName.slice(1));
 
 		$(".kickOut").css("display","none");
 		$(".mute").css("display","none");
@@ -705,8 +718,9 @@ irc.onStartConnect = function() {
 
 irc.onConnected = function(success) {console.log("onConnected " + success);
 	irc.joinChannel(Channels);
+
 	//userName=new_nick;
-		$("#myNick").html(userName.charAt(0).toUpperCase() + userName.slice(1));
+		$("#myNick").html(userName);//.charAt(0).toUpperCase() + userName.slice(1));
 		
 };
 	
@@ -963,27 +977,6 @@ irc.onWhois = function(who, data) {console.log("onWhois " + who + " " + data);
 		text=irc.messageText(data);
 		
 		console.log(colors);
-
-		text=text.replace(/:\)/g,'<i class="emoticon smile">:)</i>');
-		text=text.replace(/:3/g,'<i class="emoticon lion">:3</i>');
-		text=text.replace(/;3/g,'<i class="emoticon winky_lion">;3</i>');
-		text=text.replace(/;\)/g,'<i class="emoticon wink">;)</i>');
-		text=text.replace(/H:/g,'<i class="emoticon eyebrows">H:</i>');
-		text=text.replace(/:\(/g,'<i class="emoticon sad">:(</i>');
-		text=text.replace(/;_;/g,'<i class="emoticon cry">;_;</i>');
-		text=text.replace(/<3/g,'<i class="emoticon heart">&lt;3</i>');
-		text=text.replace(/;D/g,'<i class="emoticon wink_happy">;D</i>');
-		text=text.replace(/:P/g,'<i class="emoticon tongue">:P</i>');
-		text=text.replace(/:D/g,'<i class="emoticon happy">:D</i>');
-		text=text.replace(/:S/g,'<i class="emoticon confused">:S</i>');
-		text=text.replace(/xP/g,'<i class="emoticon cringe_tongue">xP</i>');
-		text=text.replace(/:O/g,'<i class="emoticon shocked">:O</i>');
-
-		text=text.replace(/>_</g,'<i class="emoticon doh">&gt;_&lt;</i>');
-		text=text.replace(/o.0/g,'<i class="emoticon wide_eye_right">o.0</i>');
-		text=text.replace(/0.o/g,'<i class="emoticon wide_eye_left">0.o</i>');
-		text=text.replace(/XD/g,'<i class="emoticon big_grin">XD</i>');
-		text=text.replace(/:F/g,'<i class="emoticon unsure">:\</i>');
 		
 		var text2="";
 		var endPoint;
@@ -1031,6 +1024,27 @@ irc.onWhois = function(who, data) {console.log("onWhois " + who + " " + data);
 	if(colors.length<1){text2=text;};
 	//---------------------------End Putting color----------------
 	
+	text2=text2.replace(/:\)/g,'<i class="emoticon smile">:)</i>');
+		text2=text2.replace(/:3/g,'<i class="emoticon lion">:3</i>');
+		text2=text2.replace(/;3/g,'<i class="emoticon winky_lion">;3</i>');
+		text2=text2.replace(/;\)/g,'<i class="emoticon wink">;)</i>');
+		text2=text2.replace(/H:/g,'<i class="emoticon eyebrows">H:</i>');
+		text2=text2.replace(/:\(/g,'<i class="emoticon sad">:(</i>');
+		text2=text2.replace(/;_;/g,'<i class="emoticon cry">;_;</i>');
+		text2=text2.replace(/<3/g,'<i class="emoticon heart">&lt;3</i>');
+		text2=text2.replace(/;D/g,'<i class="emoticon wink_happy">;D</i>');
+		text2=text2.replace(/:P/g,'<i class="emoticon tongue">:P</i>');
+		text2=text2.replace(/:D/g,'<i class="emoticon happy">:D</i>');
+		text2=text2.replace(/:S/g,'<i class="emoticon confused">:S</i>');
+		text2=text2.replace(/xP/g,'<i class="emoticon cringe_tongue">xP</i>');
+		text2=text2.replace(/:O/g,'<i class="emoticon shocked">:O</i>');
+
+		text2=text2.replace(/>_</g,'<i class="emoticon doh">&gt;_&lt;</i>');
+		text2=text2.replace(/o.0/g,'<i class="emoticon wide_eye_right">o.0</i>');
+		text2=text2.replace(/0.o/g,'<i class="emoticon wide_eye_left">0.o</i>');
+		text2=text2.replace(/XD/g,'<i class="emoticon big_grin">XD</i>');
+		text2=text2.replace(/:F/g,'<i class="emoticon unsure">:\</i>');
+		
 	prev_name=who;
 	
 	var d = new Date();
@@ -1040,9 +1054,9 @@ irc.onWhois = function(who, data) {console.log("onWhois " + who + " " + data);
 	if(n<10){n="0"+n;};
 	if(m<10){m="0"+m;};
 	
-	var nickName=$("li.nickSelected .nick .nickName").text();
+	//var nickName=$("li.nickSelected .nick .nickName").text();
 
-	$(".activeMsgWindow .messages").append('<div class="msg whois  nick_416873616e"><div class="time" style="line-height: 1.4;">['+n+':'+m+']</div><div class="nick" style="color:#1a2597;font-weight:bold;">['+nickName+']</div><div class="text" style="background: #F1F1F1;"><span class="inline-nick" style=";cursor:pointer;">'+text2+'</span></div></div>');
+	$(".activeMsgWindow .messages").append('<div class="msg whois  nick_416873616e"><div class="time" style="line-height: 1.4;">['+n+':'+m+']</div><div class="nick" style="color:#1a2597;font-weight:bold;">['+who+']</div><div class="text" style="background: #F1F1F1;"><span class="inline-nick" style=";cursor:pointer;">'+text2+'</span></div></div>');
 	$(".activeMsgWindow .messages")[0].scrollTop=$(".activeMsgWindow .messages")[0].scrollHeight;
 	
 	$(".activeMsgWindow .messages")[0].scrollTop=$(".activeMsgWindow .messages")[0].scrollHeight;
@@ -1080,12 +1094,20 @@ irc.onJoin = function(who, where) {console.log("onJoin " + who + " " + where);//
 	{
 		rightBar='<li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">'+who.replace("@","")+'</span></a></li>';
 		$("#"+channelName+"Persons ul").prepend(rightBar);
+		
+		shiftIt=$("#"+channelName+"Persons ul li:first");
+		
+		sortOnline_Special_Users(channelName.replace("#",""),shiftIt,who.replace("@",""),"o");
 	}
 
 	else if(who.match(/\+/g))
 	{
 		rightBar='<li class="mode v"><a class="nick"><span class="prefix">+</span><span class="nickName">'+who.replace("+","")+'</span></a></li>';
 		$("#"+channelName+"Persons ul").append(rightBar);
+		
+		shiftIt=$("#"+channelName+"Persons ul li:last");
+		
+		sortOnline_Special_Users(channelName.replace("#",""),shiftIt,who.replace("+",""),"v");
 	}
 
 	else
@@ -1349,13 +1371,23 @@ irc.onTopic = function(channel, topic) {console.log("onTopic " + channel + " " +
 	},1000);
 
 };
+
+irc.onSelfNick= function(new_nick) {console.log("onSelfNick " + new_nick);
 	
+	irc.onNick($("#myNick").text(),new_nick);
+	
+},	
 irc.onNick = function(old_nick, new_nick) {console.log("onNick " + old_nick + " " + new_nick);
 
+	var changedName=0;
+	
+	old_nick=old_nick.replace(/(?:\r\n|\r|\n)/g, '');
+	new_nick=new_nick.replace(/(?:\r\n|\r|\n)/g, '');
+	
 	//var nickName=$(".nick").html();
 	if(userName==old_nick){ //check for if my name has changed
 		userName=new_nick;
-		$("#myNick").html(userName.charAt(0).toUpperCase() + userName.slice(1));
+		$("#myNick").html(userName);//.charAt(0).toUpperCase() + userName.slice(1));
 	}
 
 	if($("#"+old_nick+"Tab").length!=0)
@@ -1375,11 +1407,13 @@ irc.onNick = function(old_nick, new_nick) {console.log("onNick " + old_nick + " 
 
 	$(".nickName").map(function(i,d){
 
-		var str=$(this).html();
-		str=str.replace(" ","").replace("@","").replace("+","");
+		var str=$(this).text();
+		str=str.replace(" ","").replace("@","").replace("+","").replace(/(?:\r\n|\r|\n)/g, '');
 
 		if(str==old_nick)
 		{
+			changedName=1;
+			
 			$(this).html(new_nick);
 
 			var id=$(this).closest(".PersonsArea").attr("id");
@@ -1415,9 +1449,15 @@ irc.onNick = function(old_nick, new_nick) {console.log("onNick " + old_nick + " 
 
 		}
 	});
+	
+	if(changedName==0){
+		
+		setTimeout(function(){irc.onNick(old_nick, new_nick);},2000);
+		
+	}
 },
 
-irc.onOp= function(channel, nick) {console.log("onOp " + channel + " " + nick);
+irc.onOp= function(source ,channel, nick) {console.log("onOp " + source + " " + channel + " " + nick);
 		
 		nick=nick.replace(" ","").replace(/(?:\r\n|\r|\n)/g, '');
 		
@@ -1469,7 +1509,7 @@ irc.onOp= function(channel, nick) {console.log("onOp " + channel + " " + nick);
 				if(m<10){m="0"+m;};
 		
 
-				$(channel+"MsgArea .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #9C2C00;width: auto;font-size: 14px;">→ '+nick+' </div><div class="nick" style="font-weight: bold;color: #9C2C00;text-transform: lowercase;">is set as Operator</div><div class="text" style="font-weight: bold;color: #9C2C00;font-size: 14px;width: auto;padding-left: 0px;">(+o)</div></div>');
+				$(channel+"MsgArea .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #9C2C00;width: auto;font-size: 14px;">→ '+source+ ' has set \'' +nick+'\' </div><div class="nick" style="font-weight: bold;color: #9C2C00;text-transform: lowercase;"> as a Operator</div><div class="text" style="font-weight: bold;color: #9C2C00;font-size: 14px;width: auto;padding-left: 0px;">(+o)</div></div>');
 				
 				$(channel+"MsgArea .messages")[0].scrollTop=$(channel+"MsgArea .messages")[0].scrollHeight;
 
@@ -1479,7 +1519,7 @@ irc.onOp= function(channel, nick) {console.log("onOp " + channel + " " + nick);
 	
 },
 	
-irc.onDeop= function(channel, nick) {console.log("onDeop " + channel + " " + nick);
+irc.onDeop= function(source,channel, nick) {console.log("onDeop "+source+" " + channel + " " + nick);
 	
 	nick=nick.replace(" ","").replace(/(?:\r\n|\r|\n)/g, '');
 	
@@ -1526,7 +1566,7 @@ irc.onDeop= function(channel, nick) {console.log("onDeop " + channel + " " + nic
 				if(m<10){m="0"+m;};
 		
 
-				$(channel+"MsgArea .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #545454;width: auto;font-size: 14px;">→ '+nick+' </div><div class="nick" style="font-weight: bold;color: #545454;text-transform: lowercase;">is removed from Operator (Deoperator)</div><div class="text" style="font-weight: bold;color: #545454;font-size: 14px;width: auto;padding-left: 0px;">(-o)</div></div>');
+				$(channel+"MsgArea .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #545454;width: auto;font-size: 14px;">→ '+source+" has removed \'"+nick+'\' </div><div class="nick" style="font-weight: bold;color: #545454;text-transform: lowercase;"> from Operator (Deoperator)</div><div class="text" style="font-weight: bold;color: #545454;font-size: 14px;width: auto;padding-left: 0px;">(-o)</div></div>');
 				
 				$(channel+"MsgArea .messages")[0].scrollTop=$(channel+"MsgArea .messages")[0].scrollHeight;
 
@@ -1535,7 +1575,7 @@ irc.onDeop= function(channel, nick) {console.log("onDeop " + channel + " " + nic
 	
 },
 	
-irc.onVoice= function(channel, nick) {console.log("onVoice " + channel + " " + nick);
+irc.onVoice= function(source,channel, nick) {console.log("onVoice " +source + " "+ channel + " " + nick);
 
 	nick=nick.replace(" ","").replace(/(?:\r\n|\r|\n)/g, '');
 		
@@ -1570,7 +1610,7 @@ irc.onVoice= function(channel, nick) {console.log("onVoice " + channel + " " + n
 				
 				sortOnline_Special_Users(channel.replace("#",""),shiftIt,nick,"v");
 
-				$(channel+"MsgArea .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #9C2C00;width: auto;font-size: 14px;">→ '+nick+' </div><div class="nick" style="font-weight: bold;color: #9C2C00;text-transform: lowercase;">has Voiced Now</div><div class="text" style="font-weight: bold;color: #9C2C00;font-size: 14px;width: auto;padding-left: 0px;">(+v)</div></div>');
+				$(channel+"MsgArea .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #9C2C00;width: auto;font-size: 14px;">→ '+source+' has voiced \''+nick+'\' </div><div class="nick" style="font-weight: bold;color: #9C2C00;text-transform: lowercase;"></div><div class="text" style="font-weight: bold;color: #9C2C00;font-size: 14px;width: auto;padding-left: 0px;">(+v)</div></div>');
 				
 				$(channel+"MsgArea .messages")[0].scrollTop=$(channel+"MsgArea .messages")[0].scrollHeight;
 
@@ -1579,7 +1619,7 @@ irc.onVoice= function(channel, nick) {console.log("onVoice " + channel + " " + n
 
 },
 
-irc.onDevoice= function(channel, nick) {console.log("onDevoice " + channel + " " + nick);
+irc.onDevoice= function(source,channel, nick) {console.log("onDevoice "+ source + " " + channel + " " + nick);
 
 	nick=nick.replace(" ","").replace(/(?:\r\n|\r|\n)/g, '');
 		
@@ -1608,7 +1648,7 @@ irc.onDevoice= function(channel, nick) {console.log("onDevoice " + channel + " "
 				if(m<10){m="0"+m;};
 		
 
-				$(channel+"MsgArea .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #545454;width: auto;font-size: 14px;">→ '+nick+' </div><div class="nick" style="font-weight: bold;color: #545454;text-transform: lowercase;">has Devoiced Now</div><div class="text" style="font-weight: bold;color: #545454;font-size: 14px;width: auto;padding-left: 0px;">(-v)</div></div>');
+				$(channel+"MsgArea .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #545454;width: auto;font-size: 14px;">→ '+source+' has Devoiced \''+nick+'\' </div><div class="nick" style="font-weight: bold;color: #545454;text-transform: lowercase;"></div><div class="text" style="font-weight: bold;color: #545454;font-size: 14px;width: auto;padding-left: 0px;">(-v)</div></div>');
 				
 				$(channel+"MsgArea .messages")[0].scrollTop=$(channel+"MsgArea .messages")[0].scrollHeight;
 
@@ -1667,8 +1707,10 @@ irc.onKick= function(channel, nick) {console.log("onKick " + channel + " " + nic
 		$(channel+"MsgArea .messages")[0].scrollTop=$(channel+"MsgArea .messages")[0].scrollHeight;
 },
 
-irc.onBan= function(channel, pattern) {console.log("onBan " + " " + channel + " " + pattern);
+irc.onBan= function(source, channel, pattern) {console.log("onBan "+ source + " " + channel + " " + pattern);
 	//alert(channel+"MsgArea .messages");
+	
+	
 		var d = new Date();
 		var n = d.getHours();
 		var m = d.getMinutes();
@@ -1677,7 +1719,7 @@ irc.onBan= function(channel, pattern) {console.log("onBan " + " " + channel + " 
 		if(m<10){m="0"+m;}
 		
 		var pattern1=String(pattern);
-		nick=pattern1.substring(0,pattern1.indexOf("!"));
+		nick=pattern1.replace(/(?:\r\n|\r|\n)/g, '');
 		
 		console.log("Nick Ban: "+nick);
 		
@@ -1685,7 +1727,7 @@ irc.onBan= function(channel, pattern) {console.log("onBan " + " " + channel + " 
 		
 		if(maNick==nick)
 		{
-			$(channel+"MsgArea .messages").append('<div class="msg privmsg"><div class="time">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #545454;width: auto;font-size: 14px;"> × You have been banned from </div><div class="text" style="font-weight: bold;color: #545454;">'+channel+'</div></div>');
+			$(channel+"MsgArea .messages").append('<div class="msg privmsg"><div class="time">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #545454;width: auto;font-size: 14px;"> × ' +source+ ' has banned you from </div><div class="text" style="font-weight: bold;color: #545454;">'+channel+'</div></div>');
 			
 			//$(channel+"Persons").css("pointer-events","none");
 			//$(channel+"Persons").css("opacity","0.7");
@@ -1693,8 +1735,10 @@ irc.onBan= function(channel, pattern) {console.log("onBan " + " " + channel + " 
 		
 		else
 		{
-			$(channel+"MsgArea .messages").append('<div class="msg privmsg"><div class="time">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #545454;width: auto;font-size: 14px;"> × '+nick+' has been banned from </div><div class="text" style="font-weight: bold;color: #545454;">'+channel+'</div></div>');
+			$(channel+"MsgArea .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="text" style="font-weight: bold;padding-right: 5px;color: #545454;width: auto;font-size: 14px;"> × '+source+' sets mode: +b ( '+nick+' )</div></div>');
 		}
+		
+		$(channel+"MsgArea .messages")[0].scrollTop=$(channel+"MsgArea .messages")[0].scrollHeight;
 },
 
 irc.onMessageDeliveryFailed= function(channel, error) {console.log("onMessageDeliveryFailed " + channel + " " + error);
@@ -1710,15 +1754,206 @@ irc.onMessageDeliveryFailed= function(channel, error) {console.log("onMessageDel
 	if($(channel+"MsgArea .messages").length>0){
 		$(channel+"MsgArea .messages").append('<div class="msg privmsg"><div class="time">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #F00;width: auto;font-size: 14px;"> == '+error+' </div><div class="text" style="font-weight: bold;color: #F00;">['+channel+']</div></div>');
 	}
+	
+	$(channel+"MsgArea .messages")[0].scrollTop=$(channel+"MsgArea .messages")[0].scrollHeight;
 },
 
-irc.onUnban= function(nick, channel, message) {console.log("onUnban " + nick + " " + channel + " " + message);},
+irc.onUnban= function(nick, channel, message) {console.log("onUnban " + nick + " " + channel + " " + message);
+
+	message=message[0].replace(/(?:\r\n|\r|\n)/g, '');
+	
+	$(".ban_Members .ban_Members_Name").map(function(index,element){
+	
+		var pattern=$("label",this).text().replace(" ","");
+		
+		if(pattern==message){
+			$(this).remove();
+		}
+	});
+	
+	var d = new Date();
+	var n = d.getHours();
+	var m = d.getMinutes();
+					
+	if(n<10){n="0"+n;}
+	if(m<10){m="0"+m;}
+	
+	var this_user=message;//.substring(0,message.indexOf("!"));
+		
+	$(channel+"MsgArea .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #008CC7;width: auto;font-size: 14px;"> → '+nick+' sets mode: -b </div><div class="text" style="font-weight: bold;color: #008CC7;">( '+this_user+' )</div></div>');
+	
+	$(channel+"MsgArea .messages")[0].scrollTop=$(channel+"MsgArea .messages")[0].scrollHeight;
+	
+},
 	
 irc.onSelfNick = function(new_nick) {console.log("onSelfNick " + new_nick);},
 irc.onSelfQuit = function() {console.log("onSelfQuit"); },
 irc.onError = function(message) {console.log("onError " + message);},
-irc.onStatus = function(message) {console.log("onStatus " + message);},
-irc.onChannelList = function(channels) {console.log("onChannelList"); console.log(channels);},
+irc.onStatus = function(message) {console.log("onStatus " + message);
+
+	var colors=irc.messageColors(message);
+	text=irc.messageText(message);
+		
+		try
+		{
+			for(var i=0;i<colors.length&&colors[i]['start']<(text.length-1);i++){
+				
+				if(colors.length==i+1)
+				{
+					endPoint=text.length-1;
+				}
+				else
+				{
+					endPoint=colors[i+1]['start'];
+				}
+				
+				
+					//if(typeof colors[i]['bg']!==undefined && typeof colors[i]['fg']!==undefined){
+						text2+="<span style='display:inline;background:"+colors[i]['bg']+";color:"+colors[i]['fg']+";'>"+text.substring(colors[i]['start'], endPoint)+"</span>";
+					//}
+					//else if(typeof colors[i]['bg']!==undefined){
+						//text="<span style='background:"+colors[0]['bg']+";'>"+text.substring(colors[i]['start'], 5)+"</span>";
+					//}
+					//else if(typeof colors[i]['fg']!==undefined){
+						//text="<span style='color:"+colors[0]['fg']+";'>"+text.substring(colors[i]['start'], 5)+"</span>";
+					//}
+				
+			}
+		}
+
+		catch(e){
+			 console.log("Color Err: ",e);
+		}
+		
+
+		var d = new Date();
+		var n = d.getHours();
+		var m = d.getMinutes();
+					
+		if(n<10){n="0"+n;};
+		if(m<10){m="0"+m;};
+		
+
+		var channelName="StatusLPSIRC";
+		//$('#textInput').val('');
+
+		var msgID=channelName+"MsgArea";
+
+		if(colors.length<1){text2=text;};
+		
+		text2=text2.replace(/:\)/g,'<i class="emoticon smile">:)</i>');
+		text2=text2.replace(/:3/g,'<i class="emoticon lion">:3</i>');
+		text2=text2.replace(/;3/g,'<i class="emoticon winky_lion">;3</i>');
+		text2=text2.replace(/;\)/g,'<i class="emoticon wink">;)</i>');
+		text2=text2.replace(/H: /g,'<i class="emoticon eyebrows">H:</i>');
+		text2=text2.replace(/:\(/g,'<i class="emoticon sad">:(</i>');
+		text2=text2.replace(/;_;/g,'<i class="emoticon cry">;_;</i>');
+		text2=text2.replace(/<3/g,'<i class="emoticon heart">&lt;3</i>');
+		text2=text2.replace(/;D/g,'<i class="emoticon wink_happy">;D</i>');
+		text2=text2.replace(/:P /g,'<i class="emoticon tongue">:P</i>');
+		text2=text2.replace(/:D /g,'<i class="emoticon happy">:D</i>');
+		text2=text2.replace(/:S /g,'<i class="emoticon confused">:S</i>');
+		text2=text2.replace(/xP /g,'<i class="emoticon cringe_tongue">xP</i>');
+		text2=text2.replace(/:O /g,'<i class="emoticon shocked">:O</i>');
+
+		text2=text2.replace(/>_</g,'<i class="emoticon doh">&gt;_&lt;</i>');
+		text2=text2.replace(/o.0/g,'<i class="emoticon wide_eye_right">o.0</i>');
+		text2=text2.replace(/0.o/g,'<i class="emoticon wide_eye_left">0.o</i>');
+		text2=text2.replace(/XD /g,'<i class="emoticon big_grin">XD</i>');
+		text2=text2.replace(/:F /g,'<i class="emoticon unsure">:\</i>');
+	
+		$("#"+msgID+" .messages").append('<div class="msg privmsg"><div class="time">['+n+':'+m+']</div><div class="nick" style="color:#20A0B5;"> → </div><div class="text" style="">'+text2+'</div></div>');
+		
+		//$("#"+msgID+ " .messages").animate({ scrollTop: $(this).scrollHeight }, "fast");
+
+		$("#"+msgID+ " .messages")[0].scrollTop=$("#"+msgID+ " .messages")[0].scrollHeight;
+		
+		if($(".full_screen_icon").hasClass("small_screen_icon")){
+			full=0;
+			make_FullScreen();
+		}
+
+},
+
+irc.onMode= function(nick, channel, message) {console.log("onMode " + nick + " " + channel + " " + message);
+	$("#myModal_Admin .btn-group").removeClass("blockPointer");
+	$("#myModal_Admin .form-group").removeClass("blockPointer");
+	$("#remove_Block_btn").removeClass("blockPointer");
+	
+	
+	message=message.replace(/(?:\r\n|\r|\n)/g, '');
+	
+	if(message.indexOf(" ")>0){
+		message=message.substring(0,message.indexOf(" "));
+	}
+	
+	
+	if(message[0]=="+"){
+		for(var i=1;i<message.length;i++){
+			if($("#"+message[i]+"Btn").length>0){
+				
+				$("#"+message[i].toLowerCase()+"Btn").addClass("btn-primary");
+				$("#"+message[i].toLowerCase()+"Btn").removeClass("btn-default");
+				$("#"+message[i].toLowerCase()+"Btn").removeClass("blockPointer");
+								
+				var d = new Date();
+				var n = d.getHours();
+				var m = d.getMinutes();
+								
+				if(n<10){n="0"+n;}
+				if(m<10){m="0"+m;}
+				
+				if(message.length==2){				
+					$(channel+"MsgArea .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #545454;width: auto;font-size: 14px;"> → '+nick+' sets mode: </div><div class="text" style="font-weight: bold;color: #545454;">+'+message[i]+'</div></div>');
+				}
+			}
+		}
+	}
+	
+	else if(message[0]=="-"){
+		for(var i=1;i<message.length;i++){
+			if($("#"+message[i]+"Btn").length>0){
+				
+				$("#"+message[i].toLowerCase()+"Btn").removeClass("btn-primary");
+				$("#"+message[i].toLowerCase()+"Btn").addClass("btn-default");
+				$("#"+message[i].toLowerCase()+"Btn").removeClass("blockPointer");
+					
+				var d = new Date();
+				var n = d.getHours();
+				var m = d.getMinutes();
+								
+				if(n<10){n="0"+n;}
+				if(m<10){m="0"+m;}
+				
+				if(message.length==2){						
+					$(channel+"MsgArea .messages").append('<div class="msg privmsg"><div class="time" style="line-height: 18px;">['+n+':'+m+']</div><div class="nick" style="font-weight: bold;padding-right: 5px;color: #008CC7;width: auto;font-size: 14px;"> → '+nick+' sets mode: </div><div class="text" style="font-weight: bold;color: #008CC7;">-'+message[i]+'</div></div>');
+				}
+			}
+		}
+	}
+},
+
+irc.onChannelList = function(channels) {console.log("onChannelList"); console.log(channels);
+
+$("#myModal .modal-body").html("");
+
+$.map(channels,function(element,index){
+	$("#myModal .modal-body").append("<button type='button' class='btn btn-primary'  ondblclick="+"joinThisChannelModal('"+element['channel'].replace("#","")+"')"+">"+element['channel'] +"</button>");
+});
+
+},
+irc.onBansList= function(channel, bans) {console.log("onBansList " + channel); console.log(bans);
+	
+	$(".ban_Members").html("");
+	
+	$.map(bans,function(element,index){
+		$(".ban_Members").append('<div class="well well-sm ban_Members_Name" style="margin-bottom: 0px; background:#FDFDFD;border-radius: 0px;padding-bottom: 3px;padding-top: 3px;-webkit-box-shadow: none;box-shadow: none;"> <input type="checkbox" value="'+element['mask']+'"><label>'+element['mask']+'</label></div>');
+	});
+	
+	if(bans.length<=0){
+		$(".ban_Members").html('<div class="alert alert-info" style="margin-bottom: 0px;"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Info!</strong> There is no Ban Member in this Channel.</div>');
+	}
+},
 	
 irc.onNames = function(channel, names) {//joinChannelsConfirmed
 
@@ -1757,7 +1992,7 @@ irc.onNames = function(channel, names) {//joinChannelsConfirmed
 		$(".memberlists div").removeClass("active");
 		$("#joinedChannels li").addClass("alert_activity")
 
-			$("#joinedChannels").append("<li id='"+channelName+"Tab' onclick="+"showThisTab('"+channelName+"',event)"+" class='active'><span>"+ channel+"</span><span id='"+channelName+"OnlineUsers' class='numOfClients' style='background:rgba(9, 191, 57, 0.75);border-radius: 1;display:none;color: #fff;border: 1px solid #DAEBF6;padding-right: 4px;padding-left: 4px;margin-right: -2px;position: relative;left: 0px;height: 18px;'>"+names1.length+"</span><div class='activity'>2</div><span id='close' class='part fa fa-nonexistant'  onclick="+"closeThisTab('"+channelName+"','"+channel+"')"+"></span></li>");
+			$("<li id='"+channelName+"Tab' onclick="+"showThisTab('"+channelName+"',event)"+" class='active'><span>"+ channel+"</span><span id='"+channelName+"OnlineUsers' class='numOfClients' style='background:rgba(9, 191, 57, 0.75);border-radius: 1;display:none;color: #fff;border: 1px solid #DAEBF6;padding-right: 4px;padding-left: 4px;margin-right: -2px;position: relative;left: 0px;height: 18px;'>"+names1.length+"</span><div class='activity'>2</div><span id='close' class='part fa fa-nonexistant'  onclick="+"closeThisTab('"+channelName+"','"+channel+"')"+"></span></li>").insertAfter("#joinedChannels li:not(.privateMsgTAb):last");
 
 		$(".panels .panel_container.container1").append('<div id="'+channelName+'MsgArea" class="panel activeMsgWindow" style="display: block;"><div class="messages" style="width: 79.9%; border-right-style: none;"></div></div>');
 
@@ -1783,25 +2018,57 @@ irc.onNames = function(channel, names) {//joinChannelsConfirmed
 		rightBar1=rightBar1+rightBar2+rightBar3+'</ul></div>';
 
 		$(".memberlists").append(rightBar1);
+		
+		if($(".activeMsgWindow").hasClass("isOperator")){
+			$(".kickOut").css("display","inherit");
+			$(".mute").css("display","inherit");
+		}
+		
+		else{
+			$(".kickOut").css("display","none");
+			$(".mute").css("display","none");
+		}
 	}
 
 	else
 	{
+		var who;
+		
 		for(var i=0;i<names1.length;i++)
 		{
+			who=names1[i];
+			
 			if(names1[i].match(/@/g))
 			{
-				rightBar1+='<li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">'+names1[i].replace("@","")+'</span></a></li>';
+				rightBar='<li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">'+names1[i].replace("@","")+'</span></a></li>';
+				
+				$("#"+channelName+"Persons ul").prepend(rightBar);
+				
+				shiftIt=$("#"+channelName+"Persons ul li:first");
+				
+				sortOnline_Special_Users(channelName.replace("#",""),shiftIt,who.replace("@",""),"o");
 			}
 
 			else if(names1[i].match(/\+/g))
 			{
-				rightBar2+='<li class="mode v"><a class="nick"><span class="prefix">+</span><span class="nickName">'+names1[i].replace("+","")+'</span></a></li>';
+				rightBar='<li class="mode v"><a class="nick"><span class="prefix">+</span><span class="nickName">'+names1[i].replace("+","")+'</span></a></li>';
+				
+				$("#"+channelName+"Persons ul").append(rightBar);
+				
+				shiftIt=$("#"+channelName+"Persons ul li:last");
+				
+				sortOnline_Special_Users(channelName.replace("#",""),shiftIt,who.replace("+",""),"v");
 			}
 
 			else
 			{
-				rightBar3+='<li class="mode"><a class="nick"><span class="prefix">@</span><span class="nickName">'+names1[i]+'</span></a></li>';
+				rightBar='<li class="mode"><a class="nick"><span class="prefix">@</span><span class="nickName">'+names1[i]+'</span></a></li>';
+				
+				$("#"+channelName+"Persons ul").append(rightBar);
+		
+				var shiftIt=$("#"+channelName+"Persons ul li:last");
+				
+				sortOnlineUsers(channelName,shiftIt,who);
 			}
 		}
 
@@ -1810,10 +2077,10 @@ irc.onNames = function(channel, names) {//joinChannelsConfirmed
 		$("#"+channelName+"OnlineUsers").html(num_users);
 		$("#"+channelName+"Persons .meta").html(num_users);
 
-		rightBar2=rightBar2+rightBar3;
+		/*rightBar2=rightBar2+rightBar3;
 
 		$("#"+channelName+"Persons ul").prepend(rightBar1);
-		$("#"+channelName+"Persons ul").append(rightBar2);
+		$("#"+channelName+"Persons ul").append(rightBar2);*/
 	}
 	
 	changeThisTheme();
@@ -1833,25 +2100,163 @@ function sortOnlineUsers(channelName,shiftIt,who){
 				}
 			}
 		});
+		
+		if(Stop==0){
+			shiftIt.appendTo($("#"+channelName+"Persons ul"));
+		}
 }
 
 
 function sortOnline_Special_Users(channelName,shiftIt,who,thisClass){
 		
 		var Stop=0;
-		$("#"+channelName+"Persons ul li").map(function(index,element){
+		$("#"+channelName+"Persons ul li."+thisClass).map(function(index,element){
 			
-			if($(this).hasClass(thisClass)){
+			//console.log(this);
+			//if($(this).hasClass(thisClass)){
 				thisNick=$(".nickName",this).text();
 				
 				if(thisNick.toLowerCase()>who.toLowerCase()&&Stop==0){
 					Stop=1;
-					shiftIt.insertAfter($(this).prev("li"));		
+					shiftIt.insertAfter($(this).prev("li"));
+
+					if(index==0){
+						if(thisClass=="o"){
+							shiftIt.prependTo($(this).closest("ul"));
+						}
+					}
+				
 				}
-			}
+			//}
 		});
 		
-		//if(Stop==0){
-			//shiftIt.insertAfter($("#"+channelName+"Persons ul li."+thisClass+":last"));
-		//}
+		if(Stop==0){
+			
+			shiftIt.removeClass(thisClass);
+			shiftIt.insertAfter($("#"+channelName+"Persons ul li."+thisClass+":last"));
+			shiftIt.addClass(thisClass);
+		}
 }
+
+function un_ban_user(){
+	
+	var channelNameForUnban=$(".PersonsArea.active .activeChannel").text();
+	
+	$(".ban_Members .ban_Members_Name").map(function(index,element){
+		if($("input",this).is(":checked")){
+			var pattern=$("label",this).text();
+			irc.unbanPatternOnChannel(channelNameForUnban,pattern);
+		}
+	});
+}
+
+function mode_commands(cmd){
+	
+	//alert($("#"+cmd+"Btn").attr("class"));
+	
+	$("#"+cmd+"Btn").addClass("blockPointer");
+	
+	if($("#"+cmd+"Btn").hasClass("btn-default")){
+		
+		var toSnd=$("#joinedChannels .active span").first().text();
+		
+		if(cmd.toLowerCase()=="k"){
+			if($("#kBtntxt").val().length>0){
+				irc.slashCommand(toSnd,"mode +"+cmd+" "+$("#kBtntxt").val());
+				$("#kBtntxt").val("");
+			}
+			
+			else{
+				alert("Please Fill the key field First!");
+				$("#"+cmd+"Btn").removeClass("blockPointer");
+			}
+		}
+		else if(cmd.toLowerCase()=="l"){
+			if($("#lBtntxt").val().length>0){
+				irc.slashCommand(toSnd,"mode +"+cmd+" "+$("#lBtntxt").val());
+				$("#lBtntxt").val("");
+			}
+			
+			else{
+				alert("Please Fill the Length field First!");
+				$("#"+cmd+"Btn").removeClass("blockPointer");
+			}
+		}
+		else{
+			irc.slashCommand(toSnd,"mode +"+cmd);
+		}
+	}
+	
+	else{
+		
+		var toSnd=$("#joinedChannels .active span").first().text();
+		
+		if(cmd.toLowerCase()=="k"){
+			if($("#kBtntxt").val().length>0){
+				irc.slashCommand(toSnd,"mode -"+cmd+" "+$("#kBtntxt").val());
+				$("#kBtntxt").val("");
+			}
+			
+			else{
+				alert("Please Fill the key field First!");
+				$("#"+cmd+"Btn").removeClass("blockPointer");
+			}
+		}
+		else if(cmd.toLowerCase()=="l"){
+			//if($("#lBtntxt").val().length>0){
+				irc.slashCommand(toSnd,"mode -"+cmd+" "+$("#lBtntxt").val());
+				$("#lBtntxt").val("");
+			//}
+			
+			//else{
+				//alert("Please Fill the Length field First!");
+				//$("#"+cmd+"Btn").removeClass("blockPointer");
+			//}
+		}
+		
+		else{
+			irc.slashCommand(toSnd,"mode -"+cmd);
+		}
+	}
+}
+
+function listTheChannels(){
+			
+	$("#myModal .modal-body").html("<center><img src='img/loading1.gif'></center>");
+	
+	irc.listChannels();
+	
+}
+
+$(document).ready(function(){
+	$(document).on("dblclick",".activeMsgWindow:not(#StatusLPSIRCMsgArea)",function(){
+		
+		var channelNameforBanUsers=$(".PersonsArea.active .activeChannel").text();
+		
+		irc.listBans(channelNameforBanUsers);
+		
+		var toSnd=$("#joinedChannels .active span").first().text();
+		
+		irc.slashCommand(toSnd,"mode");
+			
+		$("#myModal_Admin .btn-group").addClass("blockPointer");
+		$("#myModal_Admin .form-group").addClass("blockPointer");
+		$("#remove_Block_btn").addClass("blockPointer");
+		
+		$("#myModal_Admin .btn-group .btn").removeClass("btn-primary");
+		$("#myModal_Admin .btn-group .btn").addClass("btn-default");
+		$("#myModal_Admin .btn").removeClass("btn-primary");
+		$("#myModal_Admin .btn").addClass("btn-default");
+		
+		$("#myModal_Admin .btn-group .btn").removeClass("blockPointer");
+		
+		$("#myModal_Admin .btn").removeClass("blockPointer");
+						
+		$("#myModal_Admin").modal();
+		
+		$(".panel.panel-default").css("display","block");
+		
+		$(".ban_Members").html("<center><img src='img/loading1.gif'></center>");
+	});
+});
+

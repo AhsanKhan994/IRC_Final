@@ -181,7 +181,7 @@ var irc = {
 			},
 			"status": function(msg) {
 				if (_this.ignoredStatuses.indexOf(msg.command) == -1) {
-					_this.onStatus(msg.msg);
+					_this.onStatus(msg.args.join(" ") + " " + msg.msg);
 				};
 			},
 			"close": _this.onSelfQuit

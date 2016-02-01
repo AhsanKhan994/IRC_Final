@@ -54,9 +54,7 @@ package {
 			var url:String = "https://" + host + ":" + secureWebPort + "/flash/secure.xml";
 			myLoader.load(new URLRequest(url));
 			myLoader.addEventListener(Event.COMPLETE, onIDSeedLoad);
-			log("Loading idSeed: " + url);
 
-			log("Connecting socket: "+host+":"+port)
 			socket.connect(host, port);
 		}
 
@@ -78,7 +76,6 @@ package {
 				wiggle();
 				munch();
 				dataHandler = handleEncrypted;
-				log("Sending IRCVERS");
 				write("IRCVERS ConferenceRoom FLASH " + versionNumeric + " :" + copyright);
 				onConnect();
 			} else {
@@ -101,6 +98,7 @@ package {
 				var data:String;
 				if (encrypted) {
 					var chars:Array = strToChars(str+"\r\n");
+					log(chars.toString());
 					var crypt:Array = sendRC4.engineCrypt(chars);
 					var base64:String = Base64.encodeFromArray(crypt);
 					data = "<r>"+base64+"</r>";
@@ -109,7 +107,6 @@ package {
 				}
 				socket.writeUTFBytes(data);
 				socket.flush();
-				log("<- "+data);
 			} catch (e:Error) {
 				log(e.toString());
 			}
@@ -151,7 +148,6 @@ package {
 
 		protected function onDataImpl(bytes:ByteArray) {
 			var data:String = bytes.toString();
-			log("=> "+data);
 			dataHandler(data);
 		}
 
@@ -160,7 +156,7 @@ package {
 		}
 
 		protected function log(text:String):void {
-			// ExternalInterface.call("jSocket.flashCallback", "log", id, text);
+			ExternalInterface.call("jSocket.flashCallback", "log", id, text);
 		}
 
 		// idSeed
@@ -186,7 +182,6 @@ package {
 				ident = "0000000000";
 				seed = "00000000000000";
 			}
-			log("ident: "+ident+"; seed: "+seed);
 		}
 
 
@@ -205,7 +200,19 @@ package {
 			var _local3:Array = new Array();
 			var _local1:int = 0; 
 			while (_local1 < str.length) {
-				_local3.push(str.charCodeAt(_local1));
+				var code:int = str.charCodeAt(_local1);
+				if (code < 256) {
+					_local3.push(code);
+				} else {
+					if (code == 351)
+						_local3.push("s".charCodeAt());
+					else if (code == 287)
+						_local3.push("g".charCodeAt());
+					else if (code == 305)
+						_local3.push("i".charCodeAt());
+					else
+						ExternalInterface.call("jSocket.flashCallback", "error", id, "Character error: "+String.fromCharCode(code));
+				}
 				_local1++;
 			}
 			return(_local3);
